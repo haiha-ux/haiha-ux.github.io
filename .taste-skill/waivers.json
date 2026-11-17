@@ -5,11 +5,6 @@
     "reason": "Owner asked for an immersive interactive 3D hero; the full-bleed scene is a div holding its own canvas, project stars and poster fallback."
   },
   {
-    "check": "copy-actions",
-    "target": "ul.sky__stars > li.sky__li",
-    "reason": "Owner asked for the project stars in the hero to link to each project; they are the 3D scene's anchors, not competing buttons."
-  },
-  {
     "check": "shader-lint",
     "target": "\"common\"",
     "reason": "The word comes from three.js's own built-in shader chunk (#include <common>) in the bundled code, not from this site's shaders."
