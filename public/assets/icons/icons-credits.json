@@ -1,5 +1,17 @@
 [
   {
+    "file": "freecad.svg",
+    "icon": "si:freecad",
+    "name": "FreeCAD",
+    "kind": "mono",
+    "source": "simple-icons@16.30.0",
+    "author": "Simple Icons Collaborators",
+    "licence": "CC0-1.0",
+    "url": "https://github.com/simple-icons/simple-icons",
+    "trademark": true,
+    "colour": "one-colour fallback in the brand hex"
+  },
+  {
     "file": "gstreamer.svg",
     "icon": "si:gstreamer",
     "name": "GStreamer",
@@ -12,6 +24,18 @@
     "colour": "one-colour fallback in the brand hex"
   },
   {
+    "file": "hugging-face-icon.svg",
+    "icon": "logos:hugging-face-icon",
+    "name": "Hugging Face",
+    "kind": "colour",
+    "source": "gilbarbara/logos@d6960edc1b7309d392c76e40d3a320df7f9ff85c",
+    "author": "Gil Barbara",
+    "licence": "CC0-1.0",
+    "url": "https://github.com/gilbarbara/logos",
+    "trademark": true,
+    "markUrl": "https://huggingface.co/"
+  },
+  {
     "file": "kicad.svg",
     "icon": "si:kicad",
     "name": "KiCad",
@@ -22,6 +46,18 @@
     "url": "https://github.com/simple-icons/simple-icons",
     "trademark": true,
     "colour": "one-colour fallback in the brand hex"
+  },
+  {
+    "file": "numpy.svg",
+    "icon": "logos:numpy",
+    "name": "Numpy",
+    "kind": "colour",
+    "source": "gilbarbara/logos@d6960edc1b7309d392c76e40d3a320df7f9ff85c",
+    "author": "Gil Barbara",
+    "licence": "CC0-1.0",
+    "url": "https://github.com/gilbarbara/logos",
+    "trademark": true,
+    "markUrl": "https://numpy.org/"
   },
   {
     "file": "nvidia.svg",
@@ -60,6 +96,18 @@
     "markUrl": "https://opencv.org/"
   },
   {
+    "file": "pandas-icon.svg",
+    "icon": "logos:pandas-icon",
+    "name": "Pandas",
+    "kind": "colour",
+    "source": "gilbarbara/logos@d6960edc1b7309d392c76e40d3a320df7f9ff85c",
+    "author": "Gil Barbara",
+    "licence": "CC0-1.0",
+    "url": "https://github.com/gilbarbara/logos",
+    "trademark": true,
+    "markUrl": "https://pandas.pydata.org/"
+  },
+  {
     "file": "pytorch.svg",
     "icon": "logos:pytorch-icon",
     "name": "PyTorch",
@@ -70,5 +118,41 @@
     "url": "https://github.com/gilbarbara/logos",
     "trademark": true,
     "markUrl": "https://pytorch.org/"
+  },
+  {
+    "file": "qualcomm.svg",
+    "icon": "logos:qualcomm",
+    "name": "Qualcomm",
+    "kind": "colour",
+    "source": "gilbarbara/logos@d6960edc1b7309d392c76e40d3a320df7f9ff85c",
+    "author": "Gil Barbara",
+    "licence": "CC0-1.0",
+    "url": "https://github.com/gilbarbara/logos",
+    "trademark": true,
+    "markUrl": "https://www.qualcomm.com/"
+  },
+  {
+    "file": "ros.svg",
+    "icon": "logos:ros",
+    "name": "Ros",
+    "kind": "colour",
+    "source": "gilbarbara/logos@d6960edc1b7309d392c76e40d3a320df7f9ff85c",
+    "author": "Gil Barbara",
+    "licence": "CC0-1.0",
+    "url": "https://github.com/gilbarbara/logos",
+    "trademark": true,
+    "markUrl": "https://www.ros.org/"
+  },
+  {
+    "file": "scikitlearn.svg",
+    "icon": "si:scikitlearn",
+    "name": "scikit-learn",
+    "kind": "mono",
+    "source": "simple-icons@16.30.0",
+    "author": "Simple Icons Collaborators",
+    "licence": "CC0-1.0",
+    "url": "https://github.com/simple-icons/simple-icons",
+    "trademark": true,
+    "colour": "one-colour fallback in the brand hex"
   }
 ]
