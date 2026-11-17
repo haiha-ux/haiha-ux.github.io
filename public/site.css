@@ -275,7 +275,7 @@ main > #featured > .wrap, main > #bench > .wrap { height: auto; }
 @media (prefers-reduced-motion: reduce) { .lens:not([hidden]) { animation: none; } .palace__front, .palace__back { transition: none; } }
 
 /* the three hero figures span the container, first on its left line and last on its right line */
-.hero--sky .hero__facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; }
+@media (min-width: 1024px) { .hero--sky .hero__facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; } }
 @media (max-width: 639px) { .bgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-3); } .bcard__body { padding: var(--s-3); } .bcard__tile { padding: var(--s-3); } .bcard__tile b { font-size: 18px; } }
 
 .bcard__thumb img[src$=".gif"] { width: 160px; height: 160px; object-fit: contain; position: absolute; inset: 0; margin: auto; }
