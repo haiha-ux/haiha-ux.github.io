@@ -3,7 +3,6 @@ import Base from '../layouts/Base.astro';
 import Sky from '../components/Sky.astro';
 import Logo from '../components/Logo.astro';
 import FeaturedCard from '../components/FeaturedCard.astro';
-import Trace from '../components/Trace.astro';
 import fs from 'node:fs';
 import { allProjects, hasNumbers } from '../lib/projects';
 import { DOMAINS } from '../lib/domains';
@@ -12,14 +11,13 @@ const projects = await allProjects();
 const count = projects.filter(hasNumbers).length;
 const UPWORK = 'https://www.upwork.com/freelancers/~0101fb6cf6eb992555';
 const featured = projects.filter((p) => p.data.featured);
-const tabs: { id: string; label: string; domains: string[] }[] = [
-  { id: 'edge', label: 'Edge AI', domains: ['edge-ai'] },
-  { id: 'robot', label: 'Robot learning', domains: ['robot-learning'] },
-  { id: 'pcb', label: 'PCB and hardware', domains: ['pcb'] },
-  { id: 'more', label: 'CAD and other', domains: ['cad', 'other'] },
-];
-const chips = [{ id: 'all', label: 'All' }, ...tabs.map((t) => ({ id: t.id, label: t.label }))];
-const tabOf = (domain: string) => tabs.find((t) => t.domains.includes(domain))!.id;
+const ORDER = ['edge-ai', 'robot-learning', 'pcb', 'cad', 'other'];
+const sorted = [...projects].sort((x, y) => ORDER.indexOf(x.data.domain) - ORDER.indexOf(y.data.domain));
+const isVision = (p: (typeof projects)[number]) => p.data.domain === 'edge-ai' || p.data.domain === 'robot-learning';
+const benchA = sorted.filter(isVision), benchB = sorted.filter((p) => !isVision(p));
+// a wide card covers two cells: 13 cards and 3 wide make 16 cells, 10 and 2 make 12, so every row of four is full
+const wideA = new Set([0, 3, 6]), wideB = new Set([0, 3]);
+const LAYOUTS = ['wide', 'stack', 'stack', 'wide', 'tile', 'tile'] as const;
 // the short figure for a picture-less card: the metric's own `hero`, else its first number and one unit word, never a dangling comma or "of"
 const big = (m: { value: string; hero?: string }) => {
   if (m.hero) return m.hero;
@@ -39,13 +37,13 @@ const tools = [
 ];
 const demoCount = projects.filter((p) => p.data.demo).length;
 ---
-<Base title="Hai Ha: vision and AI engineer, projects with raw numbers" description={`Portfolio of Hai Ha, a vision and AI engineer in Ho Chi Minh City. ${count} public projects with raw numbers, from TensorRT benchmarks to KiCad boards.`} home>
+<Base title="Hai Ha: vision and AI engineer, projects with raw numbers" description={`Portfolio of Hai Ha, a vision and AI engineer in Ho Chi Minh City. ${count} public projects with raw numbers, from TensorRT benchmarks and AlphaZero self-play to Diffusion Policy and KiCad boards.`} home>
   <Fragment slot="head">
     <script is:inline>document.documentElement.classList.add('m-enter');setTimeout(function(){document.documentElement.classList.add('m-enter-done')},700)</script>
     <script is:inline src="/assets/backgrounds/backgrounds.js"></script>
   </Fragment>
   <Fragment slot="plan"><!-- type: software (site-kind software). deal: hero photo layer carrying a three.js foxfire scene (full bleed), nav centre, close word, footer columns, buttons arrow, mark: own fox monogram.
-     effect: the nine-tailed foxfire scene behind the hero words (one WebGL context). No dealt moment: the owner asked for none; motion is the scene, drawn PCB traces, counts and card hovers. --></Fragment>
+     effect: the nine-tailed foxfire scene behind the hero words (one WebGL context). One moment: word-highlight on the short statement. Motion is the scene, the statement, counts and card hovers. --></Fragment>
   <main id="top">
     <section class="hero hero--photo hero--sky" data-calm="left" data-box="none" data-enter aria-labelledby="hero-h">
       <Sky />
@@ -67,49 +65,55 @@ const demoCount = projects.filter((p) => p.data.demo).length;
       </div></div>
     </section>
 
-    <section class="section" id="featured" aria-labelledby="featured-h">
+    <section class="section statement" data-moment="word-highlight" aria-label="How I work">
       <div class="wrap">
-        <Trace variant={0} />
+        <p class="mo-wh__text">I measure before I write. Every project here keeps its <strong>raw numbers</strong>, the commands to reproduce them and a section on what did not work, null results included.</p>
+      </div>
+    </section>
+
+    <section class="section featured" id="featured" style="--h: 2; --hm: 2" aria-labelledby="featured-h">
+      <div class="wrap">
         <div class="section-head"><h2 id="featured-h">Six projects to start with.</h2></div>
-        <div class="grid grid--cards">
-          {featured.slice(0, 6).map((p) => <FeaturedCard id={p.id} head={p.data.title} line={`${first(p).label}: ${first(p).value}.`} live={p.data.demo?.kind === 'pcb3d' ? { kind: 'pcb3d', ...p.data.demo.props, compact: true } : undefined} />)}
+        <div class="grid grid--cards fill">
+          {featured.slice(0, 6).map((p, i) => <FeaturedCard id={p.id} layout={LAYOUTS[i]} head={p.data.title} line={`${first(p).label}: ${first(p).value}.`} live={p.data.demo?.kind === 'pcb3d' ? { kind: 'pcb3d', ...p.data.demo.props, compact: true } : undefined} />)}
         </div>
       </div>
     </section>
 
-    <section class="section" id="bench" aria-labelledby="bench-h">
-      <div class="wrap">
-        <Trace variant={1} />
-        <div class="section-head"><h2 id="bench-h"><span data-m-count>{projects.length}</span> projects on the lab bench.</h2></div>
-        <div class="chips" role="group" aria-label="Filter by trade">
-          {chips.map((c, i) => <button class="chip" type="button" data-filter={c.id} aria-pressed={i === 0 ? 'true' : 'false'}>{c.label}</button>)}
+    {[{ id: 'bench', list: benchA, wide: wideA, h: `${benchA.length} projects in vision and robot learning.`, label: 'bench-h' }, { id: 'bench-more', list: benchB, wide: wideB, h: `${benchB.length} more on the bench: boards, CAD and language models.`, label: 'bench-more-h' }].map((sec, k) => (
+      <section class="section benchsec" id={sec.id} style="--h: 2; --hm: 2" aria-labelledby={sec.label}>
+        <div class="wrap">
+          <div class="section-head"><h2 id={sec.label}>{sec.h}</h2></div>
+          <ul class="bgrid fill">
+            {sec.list.map((p, i) => {
+              const th = thumbOf(p.id);
+              return (
+                <li class={`bcard${sec.wide.has(i) ? ' bcard--wide' : ''}`}>
+                  <a class="bcard__thumb" href={`/projects/${p.id}/`} tabindex="-1" aria-hidden="true">
+                    {th ? <img src={th} alt="" loading="lazy" width="320" height="200" /> : <span class="bcard__tile"><b>{big(first(p))}</b><i>{first(p).label}</i></span>}
+                  </a>
+                  <div class="bcard__body">
+                    <h3><a href={`/projects/${p.id}/`}>{p.data.title}</a></h3>
+                    <p>{first(p).label}: <b>{first(p).value}</b></p>
+                    {p.data.demo && <a class="link bench__link" href={`/projects/${p.id}/#demo`}>Run it</a>}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+          {k === 1 && (
+            <div class="bench__foot">
+              <ul class="toolrow" aria-label="Tools I use every day">
+                {tools.map((t) => (
+                  <li><span class="ic-chip ic-chip--lg"><img class={`ic ic-40${t.wide ? ' ic-wide' : ''}`} src={`/assets/icons/${t.img}.svg`} alt="" width={t.w} height={t.wide ? 12 : 40}>{t.name}</span></li>
+                ))}
+              </ul>
+              <p class="bench__all"><a class="link" href="/projects/">See all projects</a></p>
+            </div>
+          )}
         </div>
-        <ul class="bgrid" id="bgrid">
-          {projects.map((p) => {
-            const th = thumbOf(p.id);
-            return (
-              <li class="bcard" data-tab={tabOf(p.data.domain)}>
-                <a class="bcard__thumb" href={`/projects/${p.id}/`} tabindex="-1" aria-hidden="true">
-                  {th ? <img src={th} alt="" loading="lazy" width="320" height="200" /> : <span class="bcard__tile"><b>{big(first(p))}</b><i>{first(p).label}</i></span>}
-                </a>
-                <div class="bcard__body">
-                  <h3><a href={`/projects/${p.id}/`}>{p.data.title}</a></h3>
-                  <p>{first(p).label}: <b>{first(p).value}</b></p>
-                  {p.data.demo && <a class="link bench__link" href={`/projects/${p.id}/#demo`}>Run it</a>}
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-        <p class="bench__all"><a class="link" href="/projects/">See all projects</a></p>
-        <ul class="toolrow" aria-label="Tools I use every day">
-          {tools.map((t) => (
-            <li><span class="ic-chip ic-chip--lg"><img class={`ic ic-40${t.wide ? ' ic-wide' : ''}`} src={`/assets/icons/${t.img}.svg`} alt="" width={t.w} height={t.wide ? 12 : 40}>{t.name}</span></li>
-          ))}
-        </ul>
-      </div>
-    </section>
-
+      </section>
+    ))}
   </main>
 
   <footer class="footer closing" id="contact" aria-labelledby="close-h" slot="footer">
@@ -152,30 +156,4 @@ const demoCount = projects.filter((p) => p.data.demo).length;
       void registry[spec.kind]().then((m) => m.mount(panel, spec)).catch(() => {});
     }, { rootMargin: '150px' }).observe(panel);
   });
-
-  // lab bench filter: cards that stay glide to their new place (FLIP), the rest fade out or in
-  const grid = document.getElementById('bgrid')!;
-  const cards = [...grid.querySelectorAll<HTMLElement>('.bcard')];
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const fillLast = () => {
-    const vis = cards.filter((c) => !c.hidden), cols = getComputedStyle(grid).gridTemplateColumns.split(' ').length;
-    cards.forEach((c) => { c.style.gridColumn = ''; });
-    const rest = vis.length % cols;
-    if (vis.length && rest) vis[vis.length - 1].style.gridColumn = `span ${cols - rest + 1}`;
-  };
-  fillLast(); addEventListener('resize', fillLast);
-  document.querySelectorAll<HTMLButtonElement>('.chip').forEach((btn) => btn.addEventListener('click', () => {
-    document.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', String(c === btn)));
-    const want = btn.dataset.filter!;
-    const before = new Map(cards.filter((c) => !c.hidden).map((c) => [c, c.getBoundingClientRect()]));
-    cards.forEach((c) => { c.hidden = want !== 'all' && c.dataset.tab !== want; });
-    fillLast();
-    if (reduce) return;
-    cards.forEach((c) => {
-      if (c.hidden) return;
-      const was = before.get(c), now = c.getBoundingClientRect();
-      if (!was) c.animate([{ opacity: 0, transform: 'scale(.92)' }, { opacity: 1, transform: 'none' }], { duration: 380, easing: 'cubic-bezier(.2,.7,.2,1)' });
-      else if (was.left !== now.left || was.top !== now.top) c.animate([{ transform: `translate(${was.left - now.left}px, ${was.top - now.top}px)` }, { transform: 'none' }], { duration: 420, easing: 'cubic-bezier(.2,.7,.2,1)' });
-    });
-  }));
 </script>

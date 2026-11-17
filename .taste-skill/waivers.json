@@ -1,27 +1,27 @@
 [
   {
-    "check": "moment-none",
-    "target": "(the page)",
-    "reason": "Owner asked for an immersive interactive 3D hero (a nine-tailed fox in WebGL) instead of a dealt scroll moment."
-  },
-  {
     "check": "container-edges",
-    "target": "div#sky \"Teaching an LLM",
-    "reason": "Owner asked for an immersive interactive 3D hero; the full-bleed scene is a div holding its own canvas, stars and poster fallback."
+    "target": "div#sky \"",
+    "reason": "Owner asked for an immersive interactive 3D hero; the full-bleed scene is a div holding its own canvas, project stars and poster fallback."
   },
   {
     "check": "copy-actions",
     "target": "ul.sky__stars > li.sky__li",
-    "reason": "Owner asked for the project stars in the hero to be links to each project; they are the 3D scene's anchors, not competing buttons."
+    "reason": "Owner asked for the project stars in the hero to link to each project; they are the 3D scene's anchors, not competing buttons."
   },
   {
-    "check": "section-height",
-    "target": "section#bench",
-    "reason": "Owner asked for the full lab bench of all 23 projects on the home page, so the section is taller than two screens."
+    "check": "shader-lint",
+    "target": "\"common\"",
+    "reason": "The word comes from three.js's own built-in shader chunk (#include <common>) in the bundled code, not from this site's shaders."
   },
   {
-    "check": "one-section",
-    "target": "footer#contact",
-    "reason": "Consequence of the full 23-card lab bench the owner asked for: the screen after it also shows the closing heading."
+    "check": "shader-lint",
+    "target": "sampler3D",
+    "reason": "Reserved GLSL words come from three.js's own built-in shader library in the bundled chunk, not from this site's shaders."
+  },
+  {
+    "check": "shader-lint",
+    "target": "sampler2DShadow",
+    "reason": "Reserved GLSL words come from three.js's own built-in shader library in the bundled chunk, not from this site's shaders."
   }
 ]
