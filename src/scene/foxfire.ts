@@ -20,7 +20,7 @@ const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const smooth = (a: number, b: number, v: number) => { const t = clamp((v - a) / (b - a)); return t * t * (3 - 2 * t); };
 const ease = (t: number) => 1 - Math.pow(1 - t, 3);
 const GOLD = new Color('#d9ae55'), BRASS = new Color('#c4954a'), STEEL = new Color('#9db2bc'), FIRE = new Color('#f0c872');
-const SAMPLES = 110, STRANDS = 5, FLY_MS = 800;
+const SAMPLES = 150, STRANDS = 7, SPARKS = 36, FLY_MS = 800;
 
 const POINT_VS = /* glsl */ `
   uniform float uK; uniform float uTime; uniform float uPx;
@@ -193,9 +193,14 @@ export function mount(host: HTMLElement, opts: { still?: boolean } = {}) {
   const tPosA = attr(tGeo, 'position', tPos, 3); attr(tGeo, 'aSize', tSize); const tLitA = attr(tGeo, 'aLit', tLit); attr(tGeo, 'aSeed', tSeed); attr(tGeo, 'aHover', new Float32Array(tN));
   TAILS.forEach((t, k) => { for (let s = 0; s < STRANDS; s++) for (let i = 0; i < SAMPLES; i++) {
     const n = (k * STRANDS + s) * SAMPLES + i, u = i / (SAMPLES - 1);
-    tSize[n] = (s === 2 ? (t.main ? 0.14 : 0.09) : (t.main ? 0.08 : 0.05)) * (1 - 0.4 * u) + 0.012; tSeed[n] = rnd(n, 2);
+    tSize[n] = (s === 3 ? (t.main ? 0.17 : 0.11) : (t.main ? 0.1 : 0.065)) * (1 - 0.4 * u) + 0.012; tSeed[n] = rnd(n, 2);
   } });
   const tMat = mat(POINT_VS, GOLD); const tPoints = new Points(tGeo, tMat); tPoints.frustumCulled = false; root.add(tPoints);
+  // sparks lifting off the tails
+  const spN = TAILS.length * SPARKS, spGeo = new BufferGeometry(); const spPos = new Float32Array(spN * 3), spLit = new Float32Array(spN);
+  const spPosA = attr(spGeo, 'position', spPos, 3); attr(spGeo, 'aSize', Float32Array.from({ length: spN }, (_, i) => 0.04 + rnd(i, 11) * 0.07)); const spLitA = attr(spGeo, 'aLit', spLit);
+  attr(spGeo, 'aSeed', Float32Array.from({ length: spN }, (_, i) => rnd(i, 12))); attr(spGeo, 'aHover', new Float32Array(spN));
+  const spMat = mat(POINT_VS, FIRE); const sparks = new Points(spGeo, spMat); sparks.frustumCulled = false; root.add(sparks);
   const spine = TAILS.map((t) => {
     const g = new BufferGeometry(); g.setAttribute('position', new BufferAttribute(new Float32Array(48 * 3), 3));
     const l = new Line(g, new LineBasicMaterial({ color: GOLD, transparent: true, opacity: t.main ? 0.7 : 0.3, blending: AdditiveBlending, depthWrite: false }));
@@ -247,7 +252,7 @@ export function mount(host: HTMLElement, opts: { still?: boolean } = {}) {
   const orbPosNow: Vector3[] = orbs.map(() => new Vector3());
   const tmp = new Vector3(), world = new Vector3();
   const tailU = Array.from({ length: SAMPLES }, (_, i) => i / (SAMPLES - 1));
-  const matList = [ tMat, oMat, eMat, dialMat];
+  const matList = [spMat,  tMat, oMat, eMat, dialMat];
 
   function resize() {
     const r = host.getBoundingClientRect();
@@ -351,7 +356,7 @@ export function mount(host: HTMLElement, opts: { still?: boolean } = {}) {
     // tails: three strands round a spine, a pulse running to the tip
     TAILS.forEach((tl, k) => {
       const p = clamp((I * 1.4 - k * 0.07) / 0.55), sp = spine[k].geometry.getAttribute('position') as BufferAttribute;
-      const mult = tl.main ? 1.15 : 0.55;
+      const mult = tl.main ? 1.3 : 0.7;
       for (let i = 0; i < 48; i++) { const q = tailPoint(tl, i / 47, st.sway[k], t, baseNow); sp.setXYZ(i, q[0], q[1], q[2]); }
       sp.needsUpdate = true; spine[k].geometry.setDrawRange(0, Math.max(0, Math.floor(48 * p)));
       for (let i = 0; i < SAMPLES; i++) {
@@ -361,12 +366,22 @@ export function mount(host: HTMLElement, opts: { still?: boolean } = {}) {
         const pulse = 0.55 + 0.45 * Math.pow(0.5 + 0.5 * Math.sin(u * 15 - t * 3.2 + tl.phase), 3);
         const lit = smooth(u - 0.02, u, p) * mult * pulse * (1 - 0.3 * u);
         for (let s = 0; s < STRANDS; s++) {
-          const n = (k * STRANDS + s) * SAMPLES + i, o = ((s - 2) / 2) * wd;
-          tPos[n * 3] = q[0] + nx * o; tPos[n * 3 + 1] = q[1] + ny * o; tPos[n * 3 + 2] = q[2]; tLit[n] = lit * (s === 2 ? 1 : 0.5);
+          const n = (k * STRANDS + s) * SAMPLES + i, o = ((s - 3) / 3) * wd;
+          tPos[n * 3] = q[0] + nx * o; tPos[n * 3 + 1] = q[1] + ny * o; tPos[n * 3 + 2] = q[2]; tLit[n] = lit * (s === 3 ? 1 : 0.55);
         }
       }
     });
     tPosA.needsUpdate = true; tLitA.needsUpdate = true;
+    TAILS.forEach((tl, k) => {
+      const p = clamp((I * 1.4 - k * 0.07) / 0.55);
+      for (let j = 0; j < SPARKS; j++) {
+        const n = k * SPARKS + j, sd = rnd(n, 21), life = (sd + t * (0.07 + rnd(n, 22) * 0.08)) % 1, u = 0.15 + 0.85 * ((sd * 7.3) % 1) * Math.min(1, life * 1.6);
+        const q = tailPoint(tl, Math.min(1, u), st.sway[k], t, baseNow), rise = life * life * (1.2 + rnd(n, 23));
+        spPos[n * 3] = q[0] + (rnd(n, 24) - 0.5) * 0.5 * life; spPos[n * 3 + 1] = q[1] + rise; spPos[n * 3 + 2] = q[2];
+        spLit[n] = smooth(0, 0.1, life) * smooth(1, 0.55, life) * (tl.main ? 1.1 : 0.55) * smooth(u - 0.05, u, p);
+      }
+    });
+    spPosA.needsUpdate = true; spLitA.needsUpdate = true;
 
     // flames
     const hoveredOrb = st.hover >= 0 ? orbs[st.hover] : null;

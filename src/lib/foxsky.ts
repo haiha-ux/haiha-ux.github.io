@@ -15,7 +15,7 @@ export const BASE: V3 = [2.1, 0.3, -0.6];
 export const FOX = { scale: 0.056, yaw: -1.0, x: -1.3, y: -2.0, z: 0 };
 export const FOV = 40;
 /** The brass dial under the fox: 12 signs, a flat ring that the scene tilts towards the viewer and turns. */
-export const DIAL = { cx: -0.95, cy: -1.8, r: 3.9, tilt: 0.95 };
+export const DIAL = { cx: -0.95, cy: -1.8, r: 3.9, tilt: 1.3 };
 
 
 export type Tail = { body: Body; slot: number; theta: number; len: number; curl: number; depth: number; phase: number; main: boolean };
@@ -44,7 +44,7 @@ export const tailOf = (b: Body) => TAILS.find((t) => t.body === b)!;
 export function tailPoint(t: Tail, u: number, sway = 0, time = 0, base: V3 = BASE): V3 {
   const dx = Math.cos(t.theta), dy = Math.sin(t.theta), nx = -dy, ny = dx;
   const k = 0.2 + 0.1 * t.curl;
-  const wave = 0.07 * t.len * u * Math.sin(5.2 * u - time * 1.5 + t.phase);
+  const wave = 0.07 * t.len * u * Math.sin(5.2 * u - time * 0.75 + t.phase);
   const side = k * t.len * u * u + wave + sway * u * u * 0.8;
   return [base[0] + dx * t.len * u + nx * side, base[1] + dy * t.len * u + ny * side, base[2] + t.depth * u];
 }
