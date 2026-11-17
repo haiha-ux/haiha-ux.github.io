@@ -72,9 +72,9 @@ const UPWORK = 'https://www.upwork.com/freelancers/~0101fb6cf6eb992555';
 <slot />
 {current !== 'cv' && (
   <nav class="quickbar" aria-label="Contact">
-    <a href="/quick/">CV</a>
-    <a href={UPWORK}>Upwork</a>
-    <a href="https://github.com/haiha-ux">GitHub</a>
+    <a class="btn btn--primary" href="/quick/">CV</a>
+    <a class="btn btn--secondary" href={UPWORK}>Upwork</a>
+    <a class="btn btn--secondary" href="https://github.com/haiha-ux">GitHub</a>
   </nav>
 )}
 <slot name="footer">
