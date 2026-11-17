@@ -99,6 +99,10 @@ const UPWORK = 'https://www.upwork.com/freelancers/~0101fb6cf6eb992555';
 </footer>
 </slot>
 <script is:inline>
+(function () {
+  var f = document.querySelector('footer');
+  if (f && 'IntersectionObserver' in window) new IntersectionObserver(function (e) { document.body.classList.toggle('at-foot', e[0].isIntersecting); }).observe(f);
+})();
 document.querySelectorAll('.numbers').forEach(function (b) {
   b.addEventListener('click', function () {
     var n = document.getElementById(b.getAttribute('aria-controls'));
