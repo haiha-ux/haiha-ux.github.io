@@ -1,0 +1,32 @@
+---
+import Base from '../../layouts/Base.astro';
+import { allProjects, hasNumbers } from '../../lib/projects';
+import { DOMAINS, type Domain } from '../../lib/domains';
+
+const projects = await allProjects();
+const groups = (Object.keys(DOMAINS) as Domain[]).map((d) => ({ d, list: projects.filter((p) => p.data.domain === d) })).filter((g) => g.list.length);
+---
+<Base title="Projects: Hai Ha, vision and AI engineer" description={`All ${projects.length} public projects by Hai Ha, grouped by trade, each with its raw numbers and a section on what did not work.`} current="projects">
+  <main id="top" class="page">
+    <div class="wrap">
+      <div class="page__head">
+        <h1>{projects.filter(hasNumbers).length} projects with raw numbers.</h1>
+        <p class="t-lead">Each repo has the commands to reproduce its result and a section on what did not work. Five run in your browser.</p>
+      </div>
+      {groups.map((g) => (
+        <section aria-labelledby={`g-${g.d}`}>
+          <h2 class="group-title" id={`g-${g.d}`}>{g.d === 'other' ? 'Language models' : DOMAINS[g.d]}</h2>
+          <ul class="rows plist">
+            {g.list.map((p) => (
+              <li>
+                <span class="rows__name"><a class="bench__link" href={`/projects/${p.id}/`}>{p.data.title}</a></span>
+                <p>{p.data.metrics[0].label}: <b>{p.data.metrics[0].value}</b></p>
+                {p.data.demo && <span class="rows__value"><a class="link bench__link" href={`/projects/${p.id}/#demo`}>Run it</a></span>}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+  </main>
+</Base>

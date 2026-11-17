@@ -1,0 +1,98 @@
+---
+import { DOMAINS } from '../lib/domains';
+import { TAILS, MAIN_TAILS, FOX_LINES, dialPoint, tailPoint, layoutOrbs, orbPos, projectStill, type OrbIn } from '../lib/foxsky';
+import { allProjects, bodyOf } from '../lib/projects';
+
+const projects = await allProjects();
+const orbIn: OrbIn[] = projects.map((p) => ({
+  slug: p.id,
+  title: p.data.title,
+  domain: p.data.domain,
+  body: bodyOf(p),
+  metric: p.data.metrics[0] ? `${p.data.metrics[0].label}: ${p.data.metrics[0].value}` : '',
+  featured: p.data.featured,
+  order: p.data.order,
+}));
+const orbs = layoutOrbs(orbIn);
+
+// Still views: desktop stage 1280x566 and phone stage 342x394, same geometry as the live scene at rest.
+const VIEWS = [
+  { id: 'wide', aspect: 1280 / 566 },
+  { id: 'tall', aspect: 342 / 394 },
+];
+const W = 1000;
+const fmt = (n: number) => n.toFixed(1);
+const views = VIEWS.map((v) => {
+  const H = W / v.aspect;
+  const P = (p: [number, number, number]) => {
+    const [x, y] = projectStill(p, v.aspect);
+    return [(x / 100) * W, (y / 100) * H] as [number, number];
+  };
+  const line = (pts: [number, number, number][]) => pts.map((p) => P(p).map(fmt).join(',')).join(' ');
+  const ring = Array.from({ length: 97 }, (_, i) => dialPoint((i / 96) * Math.PI * 2));
+  const ticks = Array.from({ length: 12 }, (_, i) => {
+    const a = ((i + 0.5) / 12) * Math.PI * 2 + 0;
+    return [dialPoint(a, 0.93), dialPoint(a, 1.0)] as [typeof ring[0], typeof ring[0]];
+  });
+  const tails = TAILS.map((t) => ({ main: t.main, body: t.body, pts: line(Array.from({ length: 41 }, (_, i) => tailPoint(t, i / 40))) }));
+  const orbPts = orbs.map((o) => ({ o, xy: P(orbPos(o)) }));
+  const tips = TAILS.filter((t) => !orbs.some((o) => o.body === t.body)).map((t) => P(tailPoint(t, 1)));
+  const fox = FOX_LINES.map(([a, b]) => `M${P(a).map(fmt).join(' ')}L${P(b).map(fmt).join(' ')}`).join('');
+  return { ...v, H, ring: line(ring), ticks: ticks.map(([a, b]) => `M${P(a).map(fmt).join(' ')}L${P(b).map(fmt).join(' ')}`).join(''), tails, orbPts, tips, fox };
+});
+const labels = Object.entries(MAIN_TAILS).map(([domain, body]) => {
+  const t = TAILS.find((x) => x.body === body)!;
+  const at = (v: (typeof views)[number]) => {
+    const [x, y] = projectStill(tailPoint(t, 1.0), v.aspect);
+    return [x, y] as [number, number];
+  };
+  return { body, domain: domain as keyof typeof DOMAINS, wide: at(views[0]), tall: at(views[1]) };
+});
+const pct = (xy: [number, number], H: number) => `${(xy[0] / W * 100).toFixed(2)}%`;
+const pcty = (xy: [number, number], H: number) => `${(xy[1] / H * 100).toFixed(2)}%`;
+const payload = JSON.stringify(orbs.map((o) => ({ slug: o.slug, title: o.title, domain: o.domain, body: o.body, metric: o.metric, featured: o.featured, order: o.order })));
+---
+<div class="sky" id="sky" data-sky data-orbs={payload}>
+  <div class="sky__still" aria-hidden="true">
+    {views.map((v) => (
+      <svg class={`sky__svg sky__svg--${v.id}`} viewBox={`0 0 ${W} ${fmt(v.H)}`} preserveAspectRatio="xMidYMid meet" focusable="false">
+        <defs>
+          <radialGradient id={`glow-${v.id}`}><stop offset="0" stop-color="#f3d99a" stop-opacity="0.95"/><stop offset="0.35" stop-color="#d9ae55" stop-opacity="0.45"/><stop offset="1" stop-color="#d9ae55" stop-opacity="0"/></radialGradient>
+        </defs>
+        <polyline class="sky__ring" points={v.ring} fill="none" />
+        <path class="sky__ticks" d={v.ticks} fill="none" />
+        {v.tails.map((t) => <polyline class={t.main ? 'sky__tail sky__tail--main' : 'sky__tail'} points={t.pts} fill="none" />)}
+        <path class="sky__fox" d={v.fox} fill="none" />
+        {v.tips.map((xy) => <circle cx={fmt(xy[0])} cy={fmt(xy[1])} r="3" class="sky__ember" />)}
+        {v.orbPts.map(({ o, xy }) => (
+          <g>
+            <circle cx={fmt(xy[0])} cy={fmt(xy[1])} r={o.featured ? 26 : 18} fill={`url(#glow-${v.id})`} />
+            <circle cx={fmt(xy[0])} cy={fmt(xy[1])} r={o.featured ? 5.5 : 3.8} class="sky__core" />
+          </g>
+        ))}
+      </svg>
+    ))}
+  </div>
+  <ul class="sky__stars" aria-label="Projects on the constellation">
+    {views[0].orbPts.map(({ o }, i) => (
+      <li class="sky__li" style={`--xd:${pct(views[0].orbPts[i].xy, views[0].H)};--yd:${pcty(views[0].orbPts[i].xy, views[0].H)};--xt:${pct(views[1].orbPts[i].xy, views[1].H)};--yt:${pcty(views[1].orbPts[i].xy, views[1].H)}`} data-slug={o.slug}>
+        <a class="sky__star" href={`/projects/${o.slug}/`} data-domain={o.domain}>
+          <span class="vh">{o.title}</span>
+          <span class="sky__tip" aria-hidden="true"><b>{o.title}</b><span>{o.metric}</span><em>{DOMAINS[o.domain as keyof typeof DOMAINS]}</em></span>
+        </a>
+      </li>
+    ))}
+  </ul>
+  <ul class="sky__labels" aria-hidden="true">
+    {labels.map((l) => <li class="sky__label" data-body={l.body} style={`--xd:${l.wide[0].toFixed(2)}%;--yd:${l.wide[1].toFixed(2)}%;--xt:${l.tall[0].toFixed(2)}%;--yt:${l.tall[1].toFixed(2)}%`}>{DOMAINS[l.domain]}</li>)}
+  </ul>
+  <button class="sky__pause" type="button" aria-pressed="false" hidden>Pause motion</button>
+</div>
+<script>
+  // three.js is fetched after first paint and only when motion is allowed; the still above is the poster and the fallback.
+  const sky = document.querySelector<HTMLElement>('[data-sky]');
+  if (sky && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const start = () => import('../scene/foxfire').then((m) => m.mount(sky)).catch(() => sky.classList.add('is-still'));
+    (window as any).requestIdleCallback ? (window as any).requestIdleCallback(start, { timeout: 1200 }) : setTimeout(start, 400);
+  }
+</script>

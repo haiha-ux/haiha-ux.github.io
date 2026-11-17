@@ -1,0 +1,70 @@
+---
+import fs from 'node:fs';
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { allProjects } from '../../lib/projects';
+import { DOMAINS } from '../../lib/domains';
+
+export async function getStaticPaths() {
+  const list = await allProjects();
+  return list.map((p, i) => ({ params: { slug: p.id }, props: { p, prev: list[i - 1] ?? null, next: list[i + 1] ?? null } }));
+}
+const { p, prev, next } = Astro.props;
+const { Content } = await render(p);
+const d = p.data;
+const cover = fs.existsSync(`public/projects/${p.id}/cover.webp`) ? `/projects/${p.id}/cover.webp` : null;
+const repoUrl = `https://github.com/haiha-ux/${d.repo}`;
+---
+<Base title={`${d.title}: Hai Ha`} description={d.summary.split('. ')[0] + '.'} current="projects">
+  <main id="top" class="page">
+    <div class="wrap">
+      <p class="crumbs"><a href="/projects/">Projects</a> / {DOMAINS[d.domain]}</p>
+      <div class="page__head">
+        <h1>{d.title}</h1>
+        <p class="t-lead">{d.summary}</p>
+      </div>
+      {d.metrics.length > 0 && (
+        <dl class="metrics">
+          {d.metrics.map((m) => <div><dt>{m.label}</dt><dd>{m.value}</dd></div>)}
+        </dl>
+      )}
+      {d.demo && (
+        <section class="demo" id="demo" aria-labelledby="demo-h" data-demo-kind={d.demo.kind} data-demo-src={d.demo.src} data-demo-title={d.title}>
+          <h2 class="group-title" id="demo-h">Run it in your browser</h2>
+          <div class="demo__frame" data-demo-host>
+            {cover && <img src={cover} alt="" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35">}
+            <button class="btn btn--primary" type="button" data-demo-run style="position:relative">Run it</button>
+          </div>
+          <div class="demo__links">
+            {d.demo.src && <a class="link" href={d.demo.src}>Open the demo as a full page</a>}
+          </div>
+        </section>
+      )}
+      {!d.demo && cover && <div class="cover"><img src={cover} alt={`Result figure from ${d.title}`} loading="lazy"></div>}
+      <div class="prose"><Content /></div>
+      <p style="margin-top:var(--s-7)"><a class="link" href={repoUrl}>Open the repo on GitHub</a></p>
+      <nav class="pnav" aria-label="Other projects">
+        {prev ? <a class="link" href={`/projects/${prev.id}/`}>{prev.data.title}</a> : <span></span>}
+        {next ? <a class="link" href={`/projects/${next.id}/`}>{next.data.title}</a> : <span></span>}
+      </nav>
+    </div>
+  </main>
+</Base>
+<script>
+  import { demos } from '../../demos/registry';
+  const root = document.querySelector<HTMLElement>('[data-demo-kind]');
+  const run = root?.querySelector<HTMLButtonElement>('[data-demo-run]');
+  run?.addEventListener('click', async () => {
+    const kind = root!.dataset.demoKind!;
+    const host = root!.querySelector<HTMLElement>('[data-demo-host]')!;
+    run.disabled = true;
+    run.textContent = 'Loading';
+    try {
+      const mod = await demos[kind]();
+      mod.default(host, { kind: kind as never, src: root!.dataset.demoSrc, title: root!.dataset.demoTitle });
+    } catch {
+      run.disabled = false;
+      run.textContent = 'Run it';
+    }
+  });
+</script>

@@ -1,0 +1,179 @@
+---
+import Base from '../layouts/Base.astro';
+import Sky from '../components/Sky.astro';
+import Logo from '../components/Logo.astro';
+import LiberoChart from '../components/LiberoChart.astro';
+import { allProjects, hasNumbers } from '../lib/projects';
+import { DOMAINS } from '../lib/domains';
+
+const projects = await allProjects();
+const count = projects.filter(hasNumbers).length;
+const UPWORK = 'https://www.upwork.com/freelancers/~0101fb6cf6eb992555';
+const featured = projects.filter((p) => p.data.featured);
+const heads: Record<string, string> = {
+  'yolo-tensorrt-edge': 'Runs YOLO11n at 1175 FPS',
+  'multistream-trt-pipeline': 'Tracks four camera streams live',
+  'libero-vla-repro': 'Re-runs two robot policies',
+  'alphazero-connect4': 'Trains Connect Four from scratch',
+  'pcb-esp32s3-epaper': 'Lays out an e-paper board',
+  'diffusion-policy-pusht': 'Pits diffusion against cloning',
+};
+const tabs: { id: string; label: string; domains: string[] }[] = [
+  { id: 'edge', label: 'Edge AI', domains: ['edge-ai'] },
+  { id: 'robot', label: 'Robot learning', domains: ['robot-learning'] },
+  { id: 'pcb', label: 'PCB and hardware', domains: ['pcb'] },
+  { id: 'more', label: 'CAD and other', domains: ['cad', 'other'] },
+];
+const rowsFor = (domains: string[]) => {
+  const list = projects.filter((p) => domains.includes(p.data.domain));
+  const half = Math.ceil(list.length / 2);
+  return [list.slice(0, half), list.slice(half)];
+};
+const first = (p: (typeof projects)[number]) => p.data.metrics[0];
+const tools = [
+  { img: 'pytorch', w: 33, name: 'PyTorch', line: 'Diffusion Policy, PPO and an AlphaZero agent, each written from scratch.' },
+  { img: 'nvidia', w: 40, name: 'TensorRT and CUDA', line: 'FP32, FP16 and INT8 engines for YOLO11n, up to 1175 FPS at batch 1.', wide: true },
+  { img: 'onnx', w: 40, name: 'ONNX Runtime', line: 'Four models that run in your browser through onnxruntime-web.' },
+  { img: 'opencv', w: 32, name: 'OpenCV', line: 'Calibration scored on held-out views, and ArUco pose from rendered ground truth.' },
+  { img: 'gstreamer', w: 40, name: 'GStreamer', line: 'RTSP in, NVDEC decode, one batched model call for up to 12 streams.', wide: true },
+  { img: 'kicad', w: 40, name: 'KiCad', line: 'Five boards drawn or converted, with ERC and DRC reports for each.', wide: true },
+];
+---
+<Base title="Hai Ha: vision and AI engineer, projects with raw numbers" description={`Portfolio of Hai Ha, a vision and AI engineer in Ho Chi Minh City. ${count} public projects with raw numbers, from TensorRT benchmarks to KiCad boards.`} home>
+  <Fragment slot="head">
+    <script is:inline>document.documentElement.classList.add('m-enter');setTimeout(function(){document.documentElement.classList.add('m-enter-done')},700)</script>
+    <script is:inline src="/assets/backgrounds/backgrounds.js"></script>
+    <script is:inline>document.documentElement.classList.add('mo-js');setTimeout(function(){document.documentElement.classList.add('mo-safe')},2500)</script>
+    <link rel="modulepreload" href="/assets/moments/moments.js">
+    <link rel="modulepreload" href="/assets/moments/lib.js">
+    <link rel="modulepreload" href="/assets/moments/letters-assemble/moment.js">
+    <link rel="modulepreload" href="/assets/moments/line-carries-colour/moment.js">
+  </Fragment>
+  <Fragment slot="plan"><!-- type: software (site-kind software). deal: hero product with a three.js foxfire stage, nav centre, close word, footer columns, rhythm space plus one inverse band, buttons arrow, mark: own fox monogram.
+     moments: letters-assemble in #claims, line-carries-colour in #tools. effect: the nine-tailed foxfire scene in the hero (one WebGL context). --></Fragment>
+  <main id="top">
+    <section class="hero hero--product" data-enter aria-labelledby="hero-h">
+      <div class="wrap"><div class="hero-text hero__in">
+        <div class="hero__head">
+          <div>
+            <h1 id="hero-h">Hai Ha, vision and AI engineer</h1>
+            <p class="hero__lead">I get vision models running correctly and fast on the hardware they ship on. {count} public projects, each with raw numbers and a section on what did not work.</p>
+          </div>
+          <div class="btn-row">
+            <a class="btn btn--primary" href="#bench">See the projects<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a>
+            <a class="btn btn--secondary" href={UPWORK}>Hire me on Upwork</a>
+          </div>
+        </div>
+        <div class="hero__stage"><Sky /></div>
+      </div></div>
+    </section>
+
+    <section class="section g2" id="featured" aria-labelledby="featured-h">
+      <div class="wrap">
+        <div class="group">
+          <div class="section-head"><h2 id="featured-h">Six projects to start with.</h2></div>
+          <div class="grid">
+            {featured.slice(0, 3).map((p) => (
+              <article class="card card--row card--open span-4">
+                <h3><a href={`/projects/${p.id}/`}>{heads[p.id] ?? p.data.title}</a></h3>
+                <p>{first(p).label}: {first(p).value}.</p>
+                <div class="panel panel--wide"><a class="m-zoom" href={`/projects/${p.id}/`} tabindex="-1" aria-hidden="true"><img class="frame__img" src={`/projects/${p.id}/cover.webp`} alt="" loading="lazy" width="1100" height="400"></a></div>
+              </article>
+            ))}
+          </div>
+        </div>
+        <div class="grid">
+          {featured.slice(3, 6).map((p) => (
+            <article class="card card--row card--open span-4">
+              <h3><a href={`/projects/${p.id}/`}>{heads[p.id] ?? p.data.title}</a></h3>
+              <p>{first(p).label}: {first(p).value}.</p>
+              <div class="panel panel--wide">
+                {p.id === 'libero-vla-repro'
+                  ? <a class="m-zoom lib-wrap" href={`/projects/${p.id}/`} tabindex="-1" aria-hidden="true"><LiberoChart /></a>
+                  : <a class="m-zoom" href={`/projects/${p.id}/`} tabindex="-1" aria-hidden="true"><img class="frame__img" src={`/projects/${p.id}/cover.webp`} alt="" loading="lazy" width="1100" height="400"></a>}
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="bench" style="--hm: 2" aria-labelledby="bench-h">
+      <div class="wrap">
+        <div class="section-head"><h2 id="bench-h">{projects.length} projects on the lab bench.</h2></div>
+        <div class="tabs" role="tablist" aria-label="Filter by trade">
+          {tabs.map((t, i) => <button class="tab" role="tab" type="button" id={`tab-${t.id}`} aria-controls={`panel-${t.id}`} aria-selected={i === 0 ? 'true' : 'false'}>{t.label}</button>)}
+        </div>
+        {tabs.map((t, i) => {
+          const [a, b] = rowsFor(t.domains);
+          return (
+            <div role="tabpanel" id={`panel-${t.id}`} aria-labelledby={`tab-${t.id}`} class="bench" hidden={i !== 0}>
+              <div class="grid grid--top">
+                {[a, b].map((col) => col.length > 0 && (
+                  <ul class="rows span-6">
+                    {col.map((p) => (
+                      <li>
+                        <span class="rows__name"><a class="bench__link" href={`/projects/${p.id}/`}>{p.data.title}</a></span>
+                        <p>{first(p).label}: <b>{first(p).value}</b></p>
+                        {p.data.demo && <span class="rows__value"><a class="link bench__link" href={`/projects/${p.id}/#demo`}>Run it</a></span>}
+                      </li>
+                    ))}
+                  </ul>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+        <p class="bench__all"><a class="link" href="/projects/">See all projects</a></p>
+      </div>
+    </section>
+
+    <section class="section" id="claims" data-moment="letters-assemble" data-moment-opts='{"spread": 1}' aria-labelledby="claims-h">
+      <div class="wrap">
+        <h2 id="claims-h" class="mo-la__type claims__type">Every claim has a number</h2>
+        <p class="mo-la__sub claims__sub">Each repo ships its raw data, the command that reproduces the result and a section on what did not work. Where a result is null or negative, I say so first.</p>
+      </div>
+    </section>
+
+    <section class="section ground-inverse" id="tools" data-moment="line-carries-colour" data-moment-opts='{"from": "base"}' aria-labelledby="tools-h">
+      <div class="wrap">
+        <div class="section-head"><h2 id="tools-h">Tools I use every day.</h2></div>
+        <ul class="rows tools">
+          {tools.map((t) => (
+            <li>
+              <span class="rows__name"><span class="ic-chip ic-chip--lg"><img class={`ic ic-40${t.wide ? ' ic-wide' : ''}`} src={`/assets/icons/${t.img}.svg`} alt="" width={t.w} height={t.wide ? 12 : 40}>{t.name}</span></span>
+              <p>{t.line}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer closing" id="contact" aria-labelledby="close-h" slot="footer">
+    <div class="wrap">
+      <div class="closing__cta close--word">
+        <div class="section-head--split">
+          <div><h2 id="close-h">Hire me for vision and AI work.</h2><p class="t-lead">Fixed-price jobs on Upwork: edge deployment, TensorRT and ONNX, KiCad boards.</p></div>
+          <a class="btn btn--primary" href={UPWORK}>Hire me on Upwork<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a>
+        </div>
+        <p class="close__word" aria-hidden="true">Hai Ha</p>
+      </div>
+      <div class="closing__links">
+        <div class="grid">
+          <div class="span-5 stack-4">
+            <a class="nav__logo" href="#top"><Logo />Hai Ha</a>
+            <p class="footer__lede">Vision and AI engineer in Ho Chi Minh City.</p>
+          </div>
+          <div class="span-3 start-7 footer__col"><h3>Work</h3><ul><li><a href="/projects/">All projects</a></li><li><a href="/about/">About</a></li><li><a href="/quick/">Quick CV</a></li></ul></div>
+          <div class="span-3 footer__col"><h3>Elsewhere</h3><ul><li><a href="https://github.com/haiha-ux">GitHub</a></li><li><a href={UPWORK}>Upwork</a></li></ul></div>
+        </div>
+        <div class="footer__legal">
+          <span>&copy; 2026 Hai Ha</span>
+          <button class="numbers" type="button" aria-expanded="false" aria-controls="numbers-note">3 · 9 · 4</button>
+          <p class="numbers__note" id="numbers-note" hidden>Life path 3, expression 9, soul 4. Symbols for fun, not science.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+</Base>

@@ -1,0 +1,85 @@
+---
+import Base from '../layouts/Base.astro';
+import sky from '../data/sky.json';
+import { allProjects, bodyOf } from '../lib/projects';
+
+const projects = await allProjects();
+const SIGNS = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
+const NINE = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune'] as const;
+const cap = (s: string) => s[0].toUpperCase() + s.slice(1);
+// Chart wheel: Aries starts at 9 o'clock and signs run counter-clockwise, like the wheel of a natal chart.
+const C = 250;
+const pol = (deg: number, r: number) => {
+  const a = ((180 - deg) * Math.PI) / 180;
+  return [C + r * Math.cos(a), C - r * Math.sin(a)] as const;
+};
+const f = (n: number) => n.toFixed(1);
+const wedge = (i: number) => {
+  const a0 = i * 30, a1 = a0 + 30, r0 = 118, r1 = 212;
+  const [x0, y0] = pol(a0, r1), [x1, y1] = pol(a1, r1), [x2, y2] = pol(a1, r0), [x3, y3] = pol(a0, r0);
+  return `M${f(x0)} ${f(y0)}A${r1} ${r1} 0 0 0 ${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}A${r0} ${r0} 0 0 1 ${f(x3)} ${f(y3)}Z`;
+};
+const readings = SIGNS.map((name, i) => {
+  const bodies = NINE.filter((b) => Math.floor((sky as Record<string, number>)[b] / 30) === i);
+  const mine = projects.filter((p) => bodies.includes(bodyOf(p) as never));
+  const text = mine.length
+    ? `${mine.length} project${mine.length > 1 ? 's' : ''}: ${mine.slice(0, 3).map((p) => p.data.title).join('; ')}${mine.length > 3 ? ' and more' : ''}.`
+    : bodies.length
+    ? `${bodies.map(cap).join(' and ')} here, no project yet.`
+    : 'Nothing here.';
+  return { name, bodies, mine, text, href: mine[0] ? `/projects/${mine[0].id}/` : null };
+});
+const dots = NINE.map((b) => ({ b, xy: pol((sky as Record<string, number>)[b], 104), main: b === 'sun' || b === 'jupiter' || b === 'neptune' }));
+const ticks = Array.from({ length: 72 }, (_, i) => {
+  const [x0, y0] = pol(i * 5, i % 6 === 0 ? 222 : 226), [x1, y1] = pol(i * 5, 236);
+  return `M${f(x0)} ${f(y0)}L${f(x1)} ${f(y1)}`;
+}).join('');
+---
+<Base title="About: Hai Ha, vision and AI engineer" description="Hai Ha works on perception for UAVs and on getting vision models to run correctly and fast on real hardware. Notes on the work, and a 12-sign dial of the projects." current="about">
+  <main id="top" class="page">
+    <div class="wrap">
+      <div class="page__head">
+        <h1>I get vision models running on the hardware they ship on.</h1>
+      </div>
+      <div class="about">
+        <div class="prose">
+          <p>I am Hai, an engineer in Ho Chi Minh City. At my day job I work on perception for UAVs: multi-camera fisheye calibration, depth for obstacle avoidance and quantized models on Qualcomm NPUs. I am also doing an M.Eng. in electronics at Ho Chi Minh City University of Technology. Friends call me Cáo, the fox.</p>
+          <p>The repos on this site are things I built to measure something properly. Each one has the raw numbers, the commands to reproduce them and a section on what did not work. Several of those sections report a null result, and I left them in.</p>
+          <p>In 2026 I was the AI engineer on a city-scale drone pilot for traffic and urban-order monitoring in Hanoi, covered by <a class="link" href="https://news.laodong.vn/xa-hoi/tuan-tra-bang-uav-buoc-tien-huong-toi-do-thi-an-toan-hien-dai-1742963.ldo">Lao Động</a> and <a class="link" href="https://anninhthudo.vn/cong-an-ha-noi-tuan-tra-bang-uav-make-in-viet-nam-dot-pha-quan-tri-giao-thong-va-trat-tu-do-thi-post660666.antd">An ninh Thủ đô</a>. I also co-authored MARS, a small multi-task Mamba model for mapless UAV navigation (IAAA 2026, Springer LNNS).</p>
+          <p>Day to day I use Python and C++, PyTorch, TensorRT, ONNX Runtime, OpenCV, CUDA, GStreamer, ROS 2 and KiCad.</p>
+          <p class="cv-links"><a class="btn btn--primary" href="https://www.upwork.com/freelancers/~0101fb6cf6eb992555">Hire me on Upwork</a><a class="btn btn--secondary" href="/quick/">Read the quick CV</a></p>
+        </div>
+        <div class="dial">
+          <svg viewBox="0 0 500 500" role="group" aria-label="A dial with 12 signs; each shows the projects on its tails">
+            <g class="dial__ring" aria-hidden="true">
+              <circle cx="250" cy="250" r="240" fill="none" stroke="var(--accent)" stroke-width="3" />
+              <circle cx="250" cy="250" r="219" fill="none" stroke="var(--accent)" stroke-opacity=".5" />
+              <path d={ticks} stroke="var(--accent)" stroke-width="1.4" fill="none" />
+            </g>
+            <circle cx="250" cy="250" r="114" fill="none" stroke="var(--steel)" stroke-opacity=".35" />
+            {readings.map((r, i) => (
+              <a class="dial__a" href={r.href ?? '#dial-read'} data-read={r.text} data-sign={r.name} aria-label={`${r.name}. ${r.text}`}>
+                <path class="dial__cell dial__sign" d={wedge(i)} />
+                <text x={f(pol(i * 30 + 15, 188)[0])} y={f(pol(i * 30 + 15, 188)[1] + 4)} text-anchor="middle" fill="var(--steel)" font-family="var(--font-mono)" font-size="13">{r.name.slice(0, 3)}</text>
+              </a>
+            ))}
+            {dots.map((d) => <circle cx={f(d.xy[0])} cy={f(d.xy[1])} r={d.main ? 6 : 3.5} fill={d.main ? 'var(--accent)' : 'var(--steel)'} />)}
+          </svg>
+          <p class="dial__read" id="dial-read" aria-live="polite"><b>Pick a sign.</b> The dial places the nine tails of the hero constellation by their positions in a birth chart. Symbols for fun, not science.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</Base>
+<script>
+  const read = document.getElementById('dial-read');
+  document.querySelectorAll<SVGAElement>('.dial__a').forEach((a) => {
+    const show = () => {
+      if (read) read.innerHTML = `<b>${a.dataset.sign}.</b> ${a.dataset.read}`;
+    };
+    a.addEventListener('pointerenter', show);
+    a.addEventListener('focus', show);
+  });
+  const ring = document.querySelector('.dial__ring');
+  ring?.addEventListener('pointerenter', () => ring.classList.add('is-paused'));
+</script>

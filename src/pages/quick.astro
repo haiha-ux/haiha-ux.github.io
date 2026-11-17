@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro';
+import { allProjects } from '../lib/projects';
+const projects = (await allProjects()).filter((p) => p.data.featured);
+---
+<Base title="Quick CV: Hai Ha, vision and AI engineer" description="One-page CV of Hai Ha: role, six projects with numbers, skills, education, paper and press. Prints on one A4 page." current="cv">
+  <main id="top" class="page">
+    <div class="wrap cv">
+      <div class="cv__bar no-print">
+        <button class="btn btn--primary" type="button" onclick="window.print()">Print this page</button>
+        <a class="btn btn--secondary" href="https://www.upwork.com/freelancers/~0101fb6cf6eb992555">Hire me on Upwork</a>
+      </div>
+      <h1>Hai Ha</h1>
+      <p class="t-lead">Vision and AI engineer in Ho Chi Minh City. I get vision models running correctly and fast on the hardware they ship on, and I design KiCad boards.</p>
+      <h2>Projects with numbers</h2>
+      <ul>
+        {projects.map((p) => <li><b>{p.data.title}</b><span>{p.data.metrics.map((m) => `${m.label} ${m.value}`).slice(0, 2).join('; ')}.</span></li>)}
+      </ul>
+      <h2>Skills</h2>
+      <ul>
+        <li><b>Edge AI</b><span>TensorRT FP32, FP16 and INT8, ONNX Runtime, quantized models on NPUs, GStreamer, ROS 2</span></li>
+        <li><b>Perception</b><span>Fisheye and stereo calibration, ArUco pose, depth, multi-object tracking</span></li>
+        <li><b>Robot learning</b><span>PPO, Diffusion Policy, Decision Transformer, VLA evaluation and LoRA</span></li>
+        <li><b>Hardware</b><span>KiCad schematic and layout, 2 and 4 layer boards, fab files, ERC and DRC review</span></li>
+        <li><b>Languages</b><span>Python, C++, CUDA</span></li>
+      </ul>
+      <h2>Work</h2>
+      <ul>
+        <li><b>2026</b><span>AI engineer on a city-scale drone pilot for traffic and urban-order monitoring in Hanoi, covered by Lao Động and An ninh Thủ đô.</span></li>
+        <li><b>Now</b><span>Perception for UAVs: multi-camera fisheye calibration, depth for obstacle avoidance, quantized models on Qualcomm NPUs.</span></li>
+      </ul>
+      <h2>Education and papers</h2>
+      <ul>
+        <li><b>M.Eng., electronics</b><span>Ho Chi Minh City University of Technology, in progress.</span></li>
+        <li><b>MARS</b><span>Co-author, small multi-task Mamba model for mapless UAV navigation, IAAA 2026, Springer LNNS.</span></li>
+      </ul>
+      <h2>Contact</h2>
+      <ul>
+        <li><b>GitHub</b><span><a class="link" href="https://github.com/haiha-ux">github.com/haiha-ux</a></span></li>
+        <li><b>Upwork</b><span><a class="link" href="https://www.upwork.com/freelancers/~0101fb6cf6eb992555">Hai Ha on Upwork</a></span></li>
+      </ul>
+    </div>
+  </main>
+</Base>

@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+// Nine traces leave the fox on 45 degree bends, like PCB routing; a small fox follows the middle one.
+const traces = Array.from({ length: 9 }, (_, i) => {
+  const k = i - 4, y0 = 150 + k * 7, y1 = 150 + k * 30, bend = Math.abs(y1 - y0);
+  const x1 = 170, x2 = x1 + bend;
+  return { d: `M96 ${y0}H${x1}L${x2} ${y1}H640`, end: [640, y1] as const, mid: i === 4 };
+});
+const path = traces[4].d;
+---
+<Base title="Page not found: Hai Ha" description="This address has no page. The projects, the about page and the quick CV are one click away." >
+  <main id="top" class="lost wrap">
+    <svg viewBox="0 0 680 300" role="img" aria-label="A fox head with nine circuit traces leaving it; a small fox follows one trace to its end">
+      {traces.map((t) => <><path class="lost__trace" d={t.d} /><circle cx={t.end[0]} cy={t.end[1]} r="5" fill="none" stroke="var(--steel)" stroke-opacity=".6" stroke-width="2" /></>)}
+      {traces.map((t, i) => i % 2 === 0 && <path class="lost__tail" d={t.d} style={`animation-delay:${i * 0.12}s`} />)}
+      <path class="lost__fox" d="M30 150 40 100 66 126h28L110 100 120 150v20L75 205 30 170Z" />
+      <path class="lost__fox" d="M58 148v26M92 148v26M58 160h34" />
+      <g class="lost__runner" style={`offset-path:path('${path}');`}>
+        <path class="lost__fox" transform="translate(-9 -9) scale(.38)" d="M3 12 5 2.6 10 7.4h4L19 2.6 21 12v3.6L12 22 3 15.6Z" />
+      </g>
+    </svg>
+    <h1>Page not found</h1>
+    <p class="t-lead">The fox followed the trace to this address and found nothing there.</p>
+    <p><a class="btn btn--primary" href="/">See the projects</a></p>
+  </main>
+</Base>
+<style is:global>
+  .lost__runner { offset-rotate: 0deg; animation: lost-run 7s ease-in-out 2.4s infinite alternate; offset-distance: 0%; }
+  @keyframes lost-run { to { offset-distance: 100%; } }
+  @media (prefers-reduced-motion: reduce) { .lost__runner { animation: none; offset-distance: 100%; } }
+</style>
