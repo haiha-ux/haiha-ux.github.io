@@ -12,14 +12,6 @@ const projects = await allProjects();
 const count = projects.filter(hasNumbers).length;
 const UPWORK = 'https://www.upwork.com/freelancers/~0101fb6cf6eb992555';
 const featured = projects.filter((p) => p.data.featured);
-const heads: Record<string, string> = {
-  'yolo-tensorrt-edge': 'YOLO11n on TensorRT at 1175 FPS',
-  'multistream-trt-pipeline': 'Four-stream TensorRT tracking pipeline',
-  'libero-vla-repro': 'SmolVLA and pi0-FAST re-run on LIBERO',
-  'alphazero-connect4': 'AlphaZero Connect Four, trained from scratch',
-  'pcb-esp32s3-epaper': 'ESP32-S3 e-paper board in KiCad',
-  'diffusion-policy-pusht': 'Diffusion policy against cloning on PushT',
-};
 const tabs: { id: string; label: string; domains: string[] }[] = [
   { id: 'edge', label: 'Edge AI', domains: ['edge-ai'] },
   { id: 'robot', label: 'Robot learning', domains: ['robot-learning'] },
@@ -80,7 +72,7 @@ const demoCount = projects.filter((p) => p.data.demo).length;
       <div class="wrap">
         <div class="section-head"><h2 id="featured-h">Six projects to start with.</h2></div>
         <div class="grid grid--cards">
-          {featured.slice(0, 6).map((p) => <FeaturedCard id={p.id} head={heads[p.id] ?? p.data.title} line={`${first(p).label}: ${first(p).value}.`} live={p.data.demo?.kind === 'pcb3d' ? { kind: 'pcb3d', ...p.data.demo.props, compact: true } : undefined} />)}
+          {featured.slice(0, 6).map((p) => <FeaturedCard id={p.id} head={p.data.title} line={`${first(p).label}: ${first(p).value}.`} live={p.data.demo?.kind === 'pcb3d' ? { kind: 'pcb3d', ...p.data.demo.props, compact: true } : undefined} />)}
         </div>
       </div>
     </section>

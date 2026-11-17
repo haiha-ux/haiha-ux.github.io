@@ -8,7 +8,7 @@ const paths = [
 ];
 const pads: [number, number][][] = [[[300, 40], [800, 40], [1440, 40]], [[1100, 40], [580, 40], [0, 40]], [[240, 80], [940, 80], [1440, 80]]];
 ---
-<svg class="trace" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+<svg class="trace" viewBox="-12 0 1464 120" preserveAspectRatio="none" aria-hidden="true" focusable="false">
   <path d={paths[variant % 3]} pathLength="1" />
   {pads[variant % 3].map(([x, y]) => <circle cx={x} cy={y} r="5" />)}
 </svg>

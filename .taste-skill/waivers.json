@@ -10,18 +10,18 @@
     "reason": "Reserved GLSL words come from three.js's own built-in shader library in the bundled chunk, not from this site's shaders."
   },
   {
-    "check": "scroll-reveal",
-    "target": "section#featured > svg.trace",
-    "reason": "Owner asked for drawn PCB traces between sections; decorative, no content, drawn at rest under reduced motion."
-  },
-  {
-    "check": "scroll-reveal",
-    "target": "section#bench > svg.trace",
-    "reason": "Owner asked for drawn PCB traces between sections; decorative, no content, drawn at rest under reduced motion."
+    "check": "shader-lint",
+    "target": "\"common\"",
+    "reason": "The word comes from three.js's own built-in shader chunk (#include <common>) in the bundled code, not from this site's shaders."
   },
   {
     "check": "moment-none",
     "target": "(the page)",
     "reason": "Owner asked for an immersive 3D hero (a nine-tailed fox in WebGL) instead of a dealt scroll moment."
+  },
+  {
+    "check": "container-edges",
+    "target": "button.sky__pause",
+    "reason": "Owner asked for a full-bleed 3D hero; its pause control sits at the scene's corner, outside the container lines."
   }
 ]

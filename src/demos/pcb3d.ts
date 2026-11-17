@@ -40,13 +40,13 @@ export async function mount(el: HTMLElement, props: Record<string, unknown>): Pr
 
   let renderer: THREE.WebGLRenderer;
   try {
-    renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "low-power" });
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: compact, powerPreference: "low-power" });
   } catch (e) {
     showFallback("WebGL is not available");
     return () => root.remove();
   }
   const bg = new THREE.Color(themeColor(el, "--bg"));
-  renderer.setClearColor(bg);
+  renderer.setClearColor(bg, compact ? 0 : 1);
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
