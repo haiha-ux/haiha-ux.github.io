@@ -124,7 +124,9 @@ document.querySelectorAll('.numbers').forEach(function (b) {
   });
 })();
 // view transitions between documents: the clicked project link and the project page title share one name, so the title morphs
+function quiet(vt) { if (vt) [vt.ready, vt.finished, vt.updateCallbackDone].forEach(function (p) { p.catch(function () {}); }); }
 addEventListener('pageswap', function (e) {
+  quiet(e.viewTransition);
   var to = e.activation && e.activation.entry && new URL(e.activation.entry.url).pathname.match(/^\/projects\/[^/]+\/$/);
   if (!e.viewTransition || !to) return;
   var links = document.querySelectorAll('a[href="' + to[0] + '"]'), pick = null;
@@ -132,6 +134,7 @@ addEventListener('pageswap', function (e) {
   if (pick) (pick.querySelector('.sky__tip b') || pick).style.viewTransitionName = 'proj-title';
 });
 addEventListener('pagereveal', function (e) {
+  quiet(e.viewTransition);
   var h = e.viewTransition && document.querySelector('main .page__head h1');
   if (h) h.style.viewTransitionName = 'proj-title';
 });
