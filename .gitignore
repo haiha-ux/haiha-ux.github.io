@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.astro/
+shots/
+.taste-skill/chrome*
+.taste-skill/tiles/
+.taste-skill/*
+!.taste-skill/waivers.json
