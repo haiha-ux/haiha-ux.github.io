@@ -78,7 +78,7 @@ async function ppo(el: HTMLElement, props: Record<string, unknown>) {
     // final deterministic eval: mean and sample std over seeds
     const rows = Object.keys(vars).map((k) => h("tr", {}, h("td", {}, vars[k].label), h("td", {}, `${Math.round(vars[k].final_eval.reduce((a, b) => a + b, 0) / 3)} ± ${Math.round(sd(vars[k].final_eval))}`), h("td", {}, vars[k].final_eval.map(Math.round).join(", "))));
     table.replaceChildren(h("table", { style: "width:100%;border-collapse:collapse;font-size:13px;margin-top:6px" },
-      h("caption", { style: "text-align:left;color:var(--muted,#A39A8A);padding-bottom:4px" }, "Final evaluation, 10 deterministic episodes per seed: mean ± std over 3 seeds, and the per-seed means"),
+      h("caption", { style: "text-align:left;color:color-mix(in oklab,var(--ink,#EFE7D6) 75%,var(--muted,#A39A8A));padding-bottom:4px" }, "Final evaluation, 10 deterministic episodes per seed: mean ± std over 3 seeds, and the per-seed means"),
       h("thead", {}, h("tr", {}, h("th", { scope: "col", style: "text-align:left" }, "Run"), h("th", { scope: "col", style: "text-align:left" }, "Return"), h("th", { scope: "col", style: "text-align:left" }, "Seeds"))),
       h("tbody", {}, ...rows)));
     geo = { L, W, R, nb };

@@ -3,16 +3,16 @@ const CSS = `
 .dm{font:14px/1.5 var(--font-body,system-ui,sans-serif);color:var(--ink,#EFE7D6);background:var(--surface,#1F1B16);border:1px solid color-mix(in srgb,var(--muted,#A39A8A) 35%,transparent);border-radius:10px;padding:12px;max-width:100%;box-sizing:border-box}
 .dm *{box-sizing:border-box}
 .dm h3{margin:0 0 4px;font-size:15px;font-weight:600}
-.dm .dm-sub{margin:0 0 10px;color:var(--muted,#A39A8A);font-size:13px}
+.dm .dm-sub{margin:0 0 10px;color:color-mix(in oklab,var(--ink,#EFE7D6) 75%,var(--muted,#A39A8A));font-size:13px}
 .dm .dm-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0}
 .dm button,.dm select{font:inherit;color:var(--ink,#EFE7D6);background:var(--bg,#14120F);border:1px solid color-mix(in srgb,var(--accent-2,#9DB2BC) 55%,transparent);border-radius:6px;padding:5px 10px;min-height:34px;cursor:pointer}
 .dm button[aria-pressed=true]{border-color:var(--accent,#D9AE55);color:var(--accent,#D9AE55)}
 .dm button:hover,.dm select:hover{border-color:var(--accent,#D9AE55)}
 .dm :focus-visible{outline:2px solid var(--accent,#D9AE55);outline-offset:2px}
-.dm input[type=range]{accent-color:var(--accent,#D9AE55);flex:1 1 160px;min-width:120px}
+.dm input[type=range]{accent-color:var(--accent,#D9AE55);flex:1 1 160px;min-width:120px;min-height:44px}
 .dm label{display:inline-flex;gap:6px;align-items:center;max-width:100%}
 .dm select{max-width:100%;min-width:0}
-.dm .dm-note{margin:8px 0 0;color:var(--muted,#A39A8A);font-size:12.5px}
+.dm .dm-note{margin:8px 0 0;color:color-mix(in oklab,var(--ink,#EFE7D6) 75%,var(--muted,#A39A8A));font-size:12.5px}
 .dm .dm-verdict{margin:10px 0 0;padding:8px 10px;border-left:3px solid var(--accent,#D9AE55);background:var(--bg,#14120F)}
 .dm svg{display:block;width:100%;height:auto;max-width:100%}
 .dm svg text{fill:var(--muted,#A39A8A);font:11px system-ui,sans-serif}
