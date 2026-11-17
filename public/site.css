@@ -181,7 +181,6 @@ html:not(.js-trace) .trace path { stroke-dashoffset: 0; } html:not(.js-trace) .t
   @page { size: A4; margin: 14mm; }
 }
 
-.close__word { line-height: 1.12; padding-bottom: .08em; overflow: visible; }
 
 /* the two overlay lists must not swallow the pointer; only the star links take it */
 .sky__stars, .sky__labels { pointer-events: none; }
@@ -293,3 +292,4 @@ main > #featured > .wrap, main > #bench > .wrap { height: auto; }
 @media (min-width: 640px) { .hero--photo.hero--sky[data-calm] .hero__facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-6); width: 100%; } }
 @media (min-width: 640px) { .hero--photo.hero--sky[data-calm] .hero__facts > * { grid-column: auto; } }
 .demo { grid-template-columns: minmax(0, 1fr); } .demo > * { min-width: 0; }
+@media (max-width: 639px) { .footer__lede { display: none; } .closing__links .footer__col ul { gap: 0; } }

@@ -180,11 +180,16 @@ export function mount(host: HTMLElement, opts: { still?: boolean } = {}) {
     mixer = new AnimationMixer(g.scene);
     const act = mixer.clipAction(g.animations.find((c) => c.name === 'Survey') ?? g.animations[0]); act.timeScale = 0.55; act.play();
     mixer.update(1.0);
+    headBase.copy(head.quaternion);
+    headAnimated = !opts.still && act.getClip().tracks.some((tr) => tr.name.startsWith('b_Head_05.quaternion'));
     if (opts.still) draw(0);
   }, undefined, () => { /* no fox, the tails and dial still play */ });
   const headDir = new Vector3(Math.sin(FOX.yaw), 0, Math.cos(FOX.yaw)), UP = new Vector3(0, 1, 0), pitchAxis = new Vector3().crossVectors(headDir, UP).normalize();
   const baseNow: V3 = [...BASE], pq = new Quaternion(), qw = new Quaternion(), qy = new Quaternion(), qp = new Quaternion();
-  let headYaw = 0, headPitch = 0;
+  // the head offset is a target angle (never summed into the bone across frames): pose + offset, rebuilt every frame
+  let headYaw = 0, headPitch = 0, headAnimated = false; const headBase = new Quaternion();
+  const YAW_MAX = Math.PI * 40 / 180, PITCH_MAX = Math.PI * 20 / 180;
+  const wrapPi = (a: number) => a - Math.PI * 2 * Math.floor((a + Math.PI) / (Math.PI * 2));
 
   // --- tails: dotted strands that lick like flames, with a pulse running outwards
   const tN = TAILS.length * STRANDS * SAMPLES;
@@ -331,9 +336,11 @@ export function mount(host: HTMLElement, opts: { still?: boolean } = {}) {
     if (mixer) {
       if (!opts.still) mixer.update(dt);
       const hb = head!; root.updateMatrixWorld(true);
+      if (headAnimated) headBase.copy(hb.quaternion); else hb.quaternion.copy(headBase);
       const hn = hb.getWorldPosition(new Vector3()).project(camera);
-      const wantY = st.inside ? clamp((st.px - hn.x) * 0.9, -0.75, 0.75) : 0, wantP = st.inside ? clamp((st.py - hn.y) * 0.7, -0.4, 0.45) : 0;
-      headYaw += (wantY - headYaw) * 0.07; headPitch += (wantP - headPitch) * 0.07;
+      const ok = st.inside && Number.isFinite(hn.x + hn.y) && hn.z < 1;
+      const wantY = ok ? clamp((st.px - hn.x) * 0.9, -YAW_MAX, YAW_MAX) : 0, wantP = ok ? clamp((st.py - hn.y) * 0.7, -PITCH_MAX, PITCH_MAX) : 0;
+      headYaw = clamp(headYaw + wrapPi(wantY - headYaw) * 0.07, -YAW_MAX, YAW_MAX); headPitch = clamp(headPitch + wrapPi(wantP - headPitch) * 0.07, -PITCH_MAX, PITCH_MAX);
       hb.parent!.getWorldQuaternion(pq);
       qy.setFromAxisAngle(UP, headYaw); qp.setFromAxisAngle(pitchAxis, headPitch); qw.copy(qy).multiply(qp);
       hb.quaternion.premultiply(pq.clone().invert().multiply(qw).multiply(pq));
