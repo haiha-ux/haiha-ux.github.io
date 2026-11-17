@@ -303,3 +303,4 @@ main > .statement > .wrap { justify-content: flex-start; padding-top: var(--s-7)
 .bcard--wide .bcard__thumb img { object-fit: contain; }
 @media (max-width: 639px) { footer.closing { --padb: 24px; } .bcard--wide .bcard__thumb img { object-fit: cover; } }
 @media (max-width: 639px) { .fill.grid--cards { grid-auto-rows: auto; } .fill.grid--cards > .card { min-height: auto; } }
+@media (max-width: 1279px) { .bgrid.fill, .grid.fill { flex: 1 0 auto; } }
