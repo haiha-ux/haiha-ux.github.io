@@ -112,7 +112,7 @@ const demoCount = projects.filter((p) => p.data.demo).length;
       <div class="wrap">
         <div class="toolhead">
           <div class="section-head"><h2 id="tools-h">The toolbox: TensorRT, PyTorch, KiCad and more.</h2></div>
-          <div class="toolhead__visual panel"><div class="dg" data-icon-base="/assets/icons/" data-diagram='{"layout":"lanes","alt":"A model trained in PyTorch is exported to ONNX and runs on TensorRT, Qualcomm QNN or OpenCV.","input":{"label":"PyTorch","icon":"pytorch","meta":"train"},"core":{"label":"ONNX","icon":"onnx","meta":"export"},"lanes":[{"label":"TensorRT","icon":"nvidia","meta":"CUDA GPU","done":true},{"label":"Qualcomm QNN","icon":"qualcomm","meta":"NPU","done":true},{"label":"OpenCV","icon":"opencv","meta":"CPU","done":true}]}'></div></div>
+          <div class="toolhead__visual panel" data-fx="flat"><div class="dg" data-icon-base="/assets/icons/" data-diagram='{"layout":"lanes","alt":"A model trained in PyTorch is exported to ONNX and runs on TensorRT, Qualcomm QNN or OpenCV.","input":{"label":"PyTorch","icon":"pytorch","meta":"train"},"core":{"label":"ONNX","icon":"onnx","meta":"export"},"lanes":[{"label":"TensorRT","icon":"nvidia","meta":"CUDA GPU","done":true},{"label":"QNN","icon":"qualcomm","meta":"NPU","done":true},{"label":"OpenCV","icon":"opencv","meta":"CPU","done":true}]}'></div></div>
         </div>
         <div class="toolgrid fill">
           {toolGroups.map((g) => (

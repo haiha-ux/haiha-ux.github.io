@@ -305,6 +305,7 @@ main > .statement > .wrap { justify-content: flex-start; padding-top: var(--s-7)
 /* ---- the toolbox: the heading on the left and a diagram card from column 7; below, four ruled rows, each one a single row of equal cells from the left line to the right */
 .toolhead { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); align-items: start; }
 .toolhead > .section-head { grid-column: 1 / span 6; }
+main .toolhead__visual.panel { background-color: var(--surface) !important; background-image: none; }
 .toolhead__visual { --p-h: clamp(150px, calc(100svh - 650px), 330px); grid-column: 7 / -1; align-self: start; }
 .toolgrid { display: grid; grid-template-columns: minmax(0, 1fr); grid-auto-rows: minmax(min-content, 1fr); min-width: 0; margin-top: var(--s-5); min-height: 0; border-bottom: 1px solid var(--line); }
 .toolgroup { display: grid; align-content: center; min-width: 0; min-height: 0; padding: var(--s-4) 0; border-top: 1px solid var(--line); }
