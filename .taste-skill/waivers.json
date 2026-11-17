@@ -18,5 +18,10 @@
     "check": "shader-lint",
     "target": "sampler2DShadow",
     "reason": "Reserved GLSL words come from three.js's own built-in shader library in the bundled chunk, not from this site's shaders."
+  },
+  {
+    "check": "scroll-reveal",
+    "target": "div.toolhead__visual.panel > div.dg",
+    "reason": "diagram.js of the kit colours a node while its pulse runs; it is not a reveal on scroll, and data-dg-still is already set."
   }
 ]
