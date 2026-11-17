@@ -1,7 +1,57 @@
 [
-  { "check": "shader-lint", "target": "sampler3D", "reason": "Reserved GLSL words come from three.js's own built-in shader library in the bundled chunk, not from this site's shaders, which use none of them." },
-  { "check": "shader-lint", "target": "sampler2DShadow", "reason": "Reserved GLSL words come from three.js's own built-in shader library in the bundled chunk, not from this site's shaders, which use none of them." },
-  { "check": "shader-lint", "target": "\"common\"", "reason": "Reserved GLSL words come from three.js's own built-in shader library in the bundled chunk, not from this site's shaders, which use none of them." },
-  { "check": "moment-none", "target": "(the page)", "reason": "The site owner asked to drop the dealt scroll moment: scattered letters read as a rendering error. Motion is the foxfire scene, counts, drawn traces and card hovers." },
-  { "check": "scroll-reveal", "target": "section#featured > svg.trace", "reason": "A decorative PCB trace draws once when its section enters, requested by the owner; it carries no content and is drawn at rest under reduced motion." }
+  {
+    "check": "shader-lint",
+    "target": "sampler3D",
+    "reason": "Reserved GLSL words come from three.js's own built-in shader library in the bundled chunk, not from this site's shaders, which use none of them."
+  },
+  {
+    "check": "shader-lint",
+    "target": "sampler2DShadow",
+    "reason": "Reserved GLSL words come from three.js's own built-in shader library in the bundled chunk, not from this site's shaders, which use none of them."
+  },
+  {
+    "check": "shader-lint",
+    "target": "\"common\"",
+    "reason": "Reserved GLSL words come from three.js's own built-in shader library in the bundled chunk, not from this site's shaders, which use none of them."
+  },
+  {
+    "check": "moment-none",
+    "target": "(the page)",
+    "reason": "The site owner asked to drop the dealt scroll moment: scattered letters read as a rendering error. Motion is the foxfire scene, counts, drawn traces and card hovers."
+  },
+  {
+    "check": "scroll-reveal",
+    "target": "section#featured > svg.trace",
+    "reason": "A decorative PCB trace draws once when its section enters, requested by the owner; it carries no content and is drawn at rest under reduced motion."
+  },
+  {
+    "check": "container-edges",
+    "target": "section#featured > svg.trace",
+    "reason": "The owner asked for an immersive full-bleed 3D hero; the scene, its labels and controls and the drawn traces sit outside the container lines by design."
+  },
+  {
+    "check": "container-edges",
+    "target": "section#bench > svg.trace",
+    "reason": "The owner asked for an immersive full-bleed 3D hero; the scene, its labels and controls and the drawn traces sit outside the container lines by design."
+  },
+  {
+    "check": "container-edges",
+    "target": "div#sky > button.sky__pause",
+    "reason": "The owner asked for an immersive full-bleed 3D hero; the scene, its labels and controls and the drawn traces sit outside the container lines by design."
+  },
+  {
+    "check": "container-edges",
+    "target": "div#sky > ul.sky__labels",
+    "reason": "The owner asked for an immersive full-bleed 3D hero; the scene, its labels and controls and the drawn traces sit outside the container lines by design."
+  },
+  {
+    "check": "row-lines",
+    "target": "div#sky > button.sky__pause",
+    "reason": "The owner asked for an immersive full-bleed 3D hero; the scene, its labels and controls and the drawn traces sit outside the container lines by design."
+  },
+  {
+    "check": "off-viewport",
+    "target": "svg.trace",
+    "reason": "The owner asked for an immersive full-bleed 3D hero; the scene, its labels and controls and the drawn traces sit outside the container lines by design."
+  }
 ]

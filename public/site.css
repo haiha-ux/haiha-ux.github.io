@@ -229,3 +229,7 @@ html:not(.js-trace) .trace path { stroke-dashoffset: 0; } html:not(.js-trace) .t
 .dial__list { margin: var(--s-2) 0 0; padding: 0; list-style: none; display: grid; gap: 0; }
 .dial__list .link { display: inline-flex; min-height: 32px; align-items: center; }
 .dial__read { min-height: 11em; }
+
+/* the kit sizes a section in whole screens; these two hold more than a screen of cards, so they take their own height */
+main > #featured, main > #bench { height: auto; }
+main > #featured > .wrap, main > #bench > .wrap { height: auto; }

@@ -22,6 +22,7 @@ const repoUrl = `https://github.com/haiha-ux/${d.repo}`;
       <div class="page__head">
         <h1>{d.title}</h1>
         <p class="t-lead">{d.summary}</p>
+        {d.demo && <p><a class="btn btn--primary" href="#demo">Run it<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true" style="transform: rotate(90deg)"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a></p>}
       </div>
       {d.metrics.length > 0 && (
         <dl class="metrics">
