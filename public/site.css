@@ -221,7 +221,7 @@ html:not(.js-trace) .trace path { stroke-dashoffset: 0; } html:not(.js-trace) .t
 .bcard__body { display: grid; gap: var(--s-2); padding: var(--s-4); align-content: start; }
 .bcard__body h3 { font-size: var(--t-body); font-weight: 500; line-height: 1.3; }
 .bcard__body h3 a { text-decoration: none; }
-.bcard__body p { color: var(--muted); font-size: var(--t-small); }
+.bcard__body p { color: var(--ink); font-size: var(--t-small); }
 .bcard__body b { color: var(--ink); font-weight: 500; }
 @media (prefers-reduced-motion: reduce) { .bcard, #featured .card, .bcard__thumb img, #featured .panel .frame__img { transition: none; } }
 .grid--cards { row-gap: var(--s-7); margin-top: var(--s-6); }
@@ -273,3 +273,10 @@ main > #featured > .wrap, main > #bench > .wrap { height: auto; }
 .num__n { font-weight: 500; }
 .num__h { color: var(--muted); font-size: var(--t-small); }
 @media (prefers-reduced-motion: reduce) { .lens:not([hidden]) { animation: none; } .palace__front, .palace__back { transition: none; } }
+
+/* the three hero figures span the container, first on its left line and last on its right line */
+.hero--sky .hero__facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; }
+@media (max-width: 639px) { .bgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-3); } .bcard__body { padding: var(--s-3); } .bcard__tile { padding: var(--s-3); } .bcard__tile b { font-size: 18px; } }
+
+.bcard__thumb img[src$=".gif"] { width: 160px; height: 160px; object-fit: contain; position: absolute; inset: 0; margin: auto; }
+.toolrow { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }

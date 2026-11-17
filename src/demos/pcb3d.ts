@@ -21,7 +21,7 @@ export async function mount(el: HTMLElement, props: Record<string, unknown>): Pr
   const bar = h("div", { style: "height:3px;background:color-mix(in srgb,var(--muted,#A39A8A) 30%,transparent);border-radius:2px;overflow:hidden" });
   const fill = h("div", { style: "height:100%;width:0;background:var(--accent,#D9AE55);transition:width .15s" });
   bar.append(fill);
-  const stage = h("div", { style: compact ? "position:absolute;inset:0;overflow:hidden;background:var(--bg,#14120F)" : "position:relative;width:100%;aspect-ratio:4/3;max-height:70vh;min-height:240px;border-radius:8px;overflow:hidden;background:var(--bg,#14120F)" });
+  const stage = h("div", { style: compact ? `position:absolute;inset:0;overflow:hidden;background:var(--bg,#14120F)${fallback ? ` url(${fallback}) center/cover` : ""}` : "position:relative;width:100%;aspect-ratio:4/3;max-height:70vh;min-height:240px;border-radius:8px;overflow:hidden;background:var(--bg,#14120F)" });
   const buttons = h("div", { class: "dm-row", role: "group", "aria-label": "Camera view" });
   const root = compact ? h("div", { class: "dm dm--compact", style: "position:absolute;inset:0;padding:0;border:0;border-radius:0;background:none" }, stage) : h("div", { class: "dm" }, h("h3", {}, title), stage, bar, buttons, status);
   if (note) root.append(h("p", { class: "dm-note" }, note));

@@ -57,7 +57,6 @@ const DIAL_VS = /* glsl */ `
   }`;
 // the fox: hot gold facets (face normal from screen derivatives, so the low poly shows), a fresnel rim and a pulse climbing the body
 const FOX_VS = /* glsl */ `
-  #include <common>
   #include <skinning_pars_vertex>
   varying vec3 vV; varying vec3 vO;
   void main() {

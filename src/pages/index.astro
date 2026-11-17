@@ -13,12 +13,12 @@ const count = projects.filter(hasNumbers).length;
 const UPWORK = 'https://www.upwork.com/freelancers/~0101fb6cf6eb992555';
 const featured = projects.filter((p) => p.data.featured);
 const heads: Record<string, string> = {
-  'yolo-tensorrt-edge': 'Runs YOLO11n at 1175 FPS',
-  'multistream-trt-pipeline': 'Tracks 4 camera streams',
-  'libero-vla-repro': 'Re-runs two robot policies',
-  'alphazero-connect4': 'Trains Connect Four from scratch',
-  'pcb-esp32s3-epaper': 'Lays out an e-paper board',
-  'diffusion-policy-pusht': 'Pits diffusion against cloning',
+  'yolo-tensorrt-edge': 'YOLO11n on TensorRT at 1175 FPS',
+  'multistream-trt-pipeline': 'Four-stream TensorRT tracking pipeline',
+  'libero-vla-repro': 'SmolVLA and pi0-FAST re-run on LIBERO',
+  'alphazero-connect4': 'AlphaZero Connect Four, trained from scratch',
+  'pcb-esp32s3-epaper': 'ESP32-S3 e-paper board in KiCad',
+  'diffusion-policy-pusht': 'Diffusion policy against cloning on PushT',
 };
 const tabs: { id: string; label: string; domains: string[] }[] = [
   { id: 'edge', label: 'Edge AI', domains: ['edge-ai'] },
