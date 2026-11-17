@@ -349,3 +349,6 @@ main > .statement > .wrap { justify-content: flex-start; padding-top: var(--s-7)
 
 /* the fox's nose reaches the second headline line from 1281px up: a smaller headline keeps ~60px clear of it */
 @media (min-width: 1281px) and (min-height: 821px) { .hero--sky h1 { font-size: clamp(44px, 5.3vw, 76px); } }
+
+/* phone: a card's title link is a full-height touch target, not a 23px line */
+@media (max-width: 639px) { #featured .card h3 a { display: inline-flex; align-items: center; min-height: 44px; } }
