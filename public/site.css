@@ -231,7 +231,7 @@ html:not(.js-trace) .trace path { stroke-dashoffset: 0; } html:not(.js-trace) .t
 
 /* the kit sizes a section in whole screens; these two hold more than a screen of cards, so they take their own height */
 main > #featured, main > #bench { height: auto; --tp: 250px; padding-top: var(--tp); padding-bottom: 0; }
-@media (max-width: 639px) { main > #featured, main > #bench { --tp: 230px; } .trace { top: calc(101px - var(--tp, 96px)); } }
+@media (max-width: 639px) { main > #featured, main > #bench { --tp: 230px; padding-bottom: 24px; } .trace { top: calc(101px - var(--tp, 96px)); } }
 main > #featured > .wrap, main > #bench > .wrap { height: auto; }
 
 /* ---- about: large portrait and the three lenses */

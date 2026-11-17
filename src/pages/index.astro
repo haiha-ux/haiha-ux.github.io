@@ -143,7 +143,8 @@ const demoCount = projects.filter((p) => p.data.demo).length;
 <script>
   // featured cards: the live demo mounts once, when its card scrolls into view
   import { registry } from '../demos/registry';
-  document.querySelectorAll<HTMLElement>('[data-live]').forEach((panel) => {
+  // on a phone the card stays a picture (the full demo is one tap away on the project page)
+  if (!matchMedia('(max-width: 639px)').matches) document.querySelectorAll<HTMLElement>('[data-live]').forEach((panel) => {
     const spec = JSON.parse(panel.dataset.live!);
     new IntersectionObserver((es, o) => {
       if (!es[0].isIntersecting) return;

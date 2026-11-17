@@ -11,7 +11,7 @@
   },
   {
     "check": "copy-actions",
-    "target": "li.sky__li:nth-of-type(8)",
+    "target": "ul.sky__stars > li.sky__li",
     "reason": "Owner asked for the project stars in the hero to be links to each project; they are the 3D scene's anchors, not competing buttons."
   },
   {
@@ -21,7 +21,7 @@
   },
   {
     "check": "one-section",
-    "target": "h2#close-h",
+    "target": "footer#contact",
     "reason": "Consequence of the full 23-card lab bench the owner asked for: the screen after it also shows the closing heading."
   }
 ]
