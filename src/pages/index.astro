@@ -29,11 +29,11 @@ const thumbOf = (id: string) => { const f = THUMBS.find((n) => fs.existsSync(`pu
 const first = (p: (typeof projects)[number]) => p.data.metrics[0];
 type Tool = { name: string; img?: string; w?: number; h?: number; dark?: boolean };
 // logos only where an official mark exists in the kit's sources; the rest are plain text chips
-const toolGroups: { name: string; from: string; items: Tool[] }[] = [
-  { name: 'Edge AI and inference', from: 'yolo-tensorrt-edge', items: [{ img: 'nvidia', w: 40, h: 12, name: 'TensorRT and CUDA' }, { img: 'onnx', w: 40, h: 40, name: 'ONNX Runtime' }, { img: 'qualcomm', w: 40, h: 7, name: 'Qualcomm QNN', dark: true }, { img: 'opencv', w: 32, h: 40, name: 'OpenCV' }, { img: 'gstreamer', w: 40, h: 12, name: 'GStreamer' }] },
-  { name: 'ML and robot learning', from: 'diffusion-policy-pusht', items: [{ img: 'pytorch', w: 33, h: 40, name: 'PyTorch' }, { img: 'scikitlearn', w: 40, h: 23, name: 'scikit-learn' }, { img: 'hugging-face-icon', w: 40, h: 37, name: 'Hugging Face' }, { name: 'LeRobot' }, { name: 'Stable-Baselines3 and Gymnasium' }, { name: 'MuJoCo' }, { name: 'Isaac Sim' }] },
-  { name: 'Hardware and CAD', from: 'pcb-rp2040-usbc', items: [{ img: 'kicad', w: 40, h: 12, name: 'KiCad' }, { img: 'freecad', w: 34, h: 40, name: 'FreeCAD' }] },
-  { name: 'Systems and data', from: 'camera-calibration-report', items: [{ img: 'ros', w: 40, h: 11, name: 'ROS 2', dark: true }, { img: 'numpy', w: 37, h: 40, name: 'NumPy' }, { img: 'pandas-icon', w: 25, h: 40, name: 'pandas', dark: true }] },
+const toolGroups: { name: string; items: Tool[] }[] = [
+  { name: 'Edge AI and inference', items: [{ img: 'nvidia', w: 40, h: 12, name: 'TensorRT and CUDA' }, { img: 'onnx', w: 40, h: 40, name: 'ONNX Runtime' }, { img: 'qualcomm', w: 40, h: 7, name: 'Qualcomm QNN', dark: true }, { img: 'opencv', w: 32, h: 40, name: 'OpenCV' }, { img: 'gstreamer', w: 40, h: 12, name: 'GStreamer' }] },
+  { name: 'ML and robot learning', items: [{ img: 'pytorch', w: 33, h: 40, name: 'PyTorch' }, { img: 'scikitlearn', w: 40, h: 23, name: 'scikit-learn' }, { img: 'hugging-face-icon', w: 40, h: 37, name: 'Hugging Face' }, { name: 'LeRobot' }, { name: 'Stable-Baselines3 and Gymnasium' }, { name: 'MuJoCo' }, { name: 'Isaac Sim' }] },
+  { name: 'Hardware and CAD', items: [{ img: 'kicad', w: 40, h: 12, name: 'KiCad' }, { img: 'freecad', w: 34, h: 40, name: 'FreeCAD' }] },
+  { name: 'Systems and data', items: [{ img: 'ros', w: 40, h: 11, name: 'ROS 2', dark: true }, { img: 'numpy', w: 37, h: 40, name: 'NumPy' }, { img: 'pandas-icon', w: 25, h: 40, name: 'pandas', dark: true }] },
 ];
 const demoCount = projects.filter((p) => p.data.demo).length;
 ---
@@ -106,13 +106,12 @@ const demoCount = projects.filter((p) => p.data.demo).length;
       </section>
     ))}
 
-    <section class="section tools" id="tools" style="--hm: 2" aria-labelledby="tools-h">
+    <section class="section tools" id="tools" style="--h: 1; --hm: 1" aria-labelledby="tools-h">
       <div class="wrap">
         <div class="section-head"><h2 id="tools-h">The toolbox: TensorRT, PyTorch, KiCad and more.</h2></div>
         <div class="toolgrid fill">
-          {toolGroups.map((g, i) => (
-            <div class={`toolgroup${i % 2 ? ' toolgroup--flip' : ''}`}>
-              <img class="toolgroup__img" src={thumbOf(g.from)!} alt="" loading="lazy" width="320" height="200">
+          {toolGroups.map((g) => (
+            <div class="toolgroup">
               <div class="toolgroup__body">
               <p class="toolgroup__n">{g.name}</p>
               <ul class="toolrow">
