@@ -15,14 +15,15 @@ export async function mount(el: HTMLElement, props: Record<string, unknown>): Pr
   const fallback = typeof props.fallback === "string" ? props.fallback : "";
   const title = typeof props.title === "string" ? props.title : "PCB 3D view";
   const note = typeof props.note === "string" ? props.note : "";
+  const compact = props.compact === true; // a bare turning board for a card: no title, buttons or status line
 
   const status = h("div", { class: "dm-tip", role: "status", "aria-live": "polite" }, "Loading 3D board...");
   const bar = h("div", { style: "height:3px;background:color-mix(in srgb,var(--muted,#A39A8A) 30%,transparent);border-radius:2px;overflow:hidden" });
   const fill = h("div", { style: "height:100%;width:0;background:var(--accent,#D9AE55);transition:width .15s" });
   bar.append(fill);
-  const stage = h("div", { style: "position:relative;width:100%;aspect-ratio:4/3;max-height:70vh;min-height:240px;border-radius:8px;overflow:hidden;background:var(--bg,#14120F)" });
+  const stage = h("div", { style: compact ? "position:absolute;inset:0;overflow:hidden;background:var(--bg,#14120F)" : "position:relative;width:100%;aspect-ratio:4/3;max-height:70vh;min-height:240px;border-radius:8px;overflow:hidden;background:var(--bg,#14120F)" });
   const buttons = h("div", { class: "dm-row", role: "group", "aria-label": "Camera view" });
-  const root = h("div", { class: "dm" }, h("h3", {}, title), stage, bar, buttons, status);
+  const root = compact ? h("div", { class: "dm dm--compact", style: "position:absolute;inset:0;padding:0;border:0;border-radius:0;background:none" }, stage) : h("div", { class: "dm" }, h("h3", {}, title), stage, bar, buttons, status);
   if (note) root.append(h("p", { class: "dm-note" }, note));
   el.append(root);
 
@@ -72,6 +73,7 @@ export async function mount(el: HTMLElement, props: Record<string, unknown>): Pr
   controls.enableDamping = !reducedMotion();
   controls.dampingFactor = 0.12;
   controls.screenSpacePanning = true;
+  if (compact && !reducedMotion()) { controls.autoRotate = true; controls.autoRotateSpeed = 1.6; controls.enablePan = false; controls.enableZoom = false; }
 
   let needs = true;
   const request = () => { needs = true; };

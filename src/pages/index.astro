@@ -4,6 +4,7 @@ import Sky from '../components/Sky.astro';
 import Logo from '../components/Logo.astro';
 import FeaturedCard from '../components/FeaturedCard.astro';
 import Trace from '../components/Trace.astro';
+import fs from 'node:fs';
 import { allProjects, hasNumbers } from '../lib/projects';
 import { DOMAINS } from '../lib/domains';
 
@@ -25,11 +26,11 @@ const tabs: { id: string; label: string; domains: string[] }[] = [
   { id: 'pcb', label: 'PCB and hardware', domains: ['pcb'] },
   { id: 'more', label: 'CAD and other', domains: ['cad', 'other'] },
 ];
-const rowsFor = (domains: string[]) => {
-  const list = projects.filter((p) => domains.includes(p.data.domain));
-  const half = Math.ceil(list.length / 2);
-  return [list.slice(0, half), list.slice(half)];
-};
+const chips = [{ id: 'all', label: 'All' }, ...tabs.map((t) => ({ id: t.id, label: t.label }))];
+const tabOf = (domain: string) => tabs.find((t) => t.domains.includes(domain))!.id;
+const big = (v: string) => (v.length <= 14 ? v : v.match(/\d[\d.,]*(?:\s?\/\s?\d+)?\s?(?:%|[A-Za-z]{1,3}\b)?/)?.[0] ?? v.slice(0, 14));
+const THUMBS = ['cover.webp', 'fallback.png', 'left02.jpg', 'rollout.gif'];
+const thumbOf = (id: string) => { const f = THUMBS.find((n) => fs.existsSync(`public/projects/${id}/${n}`)); return f ? `/projects/${id}/${f}` : null; };
 const first = (p: (typeof projects)[number]) => p.data.metrics[0];
 const tools = [
   { img: 'pytorch', w: 33, name: 'PyTorch' },
@@ -72,14 +73,9 @@ const demoCount = projects.filter((p) => p.data.demo).length;
     <section class="section g2" id="featured" aria-labelledby="featured-h">
       <Trace variant={0} />
       <div class="wrap">
-        <div class="group">
-          <div class="section-head"><h2 id="featured-h">Six projects to start with.</h2></div>
-          <div class="grid">
-            {featured.slice(0, 3).map((p) => <FeaturedCard id={p.id} head={heads[p.id] ?? p.data.title} line={`${first(p).label}: ${first(p).value}.`} />)}
-          </div>
-        </div>
-        <div class="grid">
-          {featured.slice(3, 6).map((p) => <FeaturedCard id={p.id} head={heads[p.id] ?? p.data.title} line={`${first(p).label}: ${first(p).value}.`} />)}
+        <div class="section-head"><h2 id="featured-h">Six projects to start with.</h2></div>
+        <div class="grid grid--cards">
+          {featured.slice(0, 6).map((p) => <FeaturedCard id={p.id} head={heads[p.id] ?? p.data.title} line={`${first(p).label}: ${first(p).value}.`} live={p.data.demo?.kind === 'pcb3d' ? { kind: 'pcb3d', ...p.data.demo.props, compact: true } : undefined} />)}
         </div>
       </div>
     </section>
@@ -87,30 +83,27 @@ const demoCount = projects.filter((p) => p.data.demo).length;
     <section class="section" id="bench" style="--hm: 2" aria-labelledby="bench-h">
       <Trace variant={1} />
       <div class="wrap">
-        <div class="section-head"><h2 id="bench-h">{projects.length} projects on the lab bench.</h2></div>
-        <div class="tabs" role="tablist" aria-label="Filter by trade">
-          {tabs.map((t, i) => <button class="tab" role="tab" type="button" id={`tab-${t.id}`} aria-controls={`panel-${t.id}`} aria-selected={i === 0 ? 'true' : 'false'}>{t.label}</button>)}
+        <div class="section-head"><h2 id="bench-h"><span data-m-count>{projects.length}</span> projects on the lab bench.</h2></div>
+        <div class="chips" role="group" aria-label="Filter by trade">
+          {chips.map((c, i) => <button class="chip" type="button" data-filter={c.id} aria-pressed={i === 0 ? 'true' : 'false'}>{c.label}</button>)}
         </div>
-        {tabs.map((t, i) => {
-          const [a, b] = rowsFor(t.domains);
-          return (
-            <div role="tabpanel" id={`panel-${t.id}`} aria-labelledby={`tab-${t.id}`} class="bench" hidden={i !== 0}>
-              <div class="grid grid--top">
-                {[a, b].map((col) => col.length > 0 && (
-                  <ul class="rows span-6">
-                    {col.map((p) => (
-                      <li>
-                        <span class="rows__name"><a class="bench__link" href={`/projects/${p.id}/`}>{p.data.title}</a></span>
-                        <p>{first(p).label}: <b>{first(p).value}</b></p>
-                        {p.data.demo && <span class="rows__value"><a class="link bench__link" href={`/projects/${p.id}/#demo`}>Run it</a></span>}
-                      </li>
-                    ))}
-                  </ul>
-                ))}
-              </div>
-            </div>
-          );
-        })}
+        <ul class="bgrid" id="bgrid">
+          {projects.map((p) => {
+            const th = thumbOf(p.id);
+            return (
+              <li class="bcard" data-tab={tabOf(p.data.domain)}>
+                <a class="bcard__thumb" href={`/projects/${p.id}/`} tabindex="-1" aria-hidden="true">
+                  {th ? <img src={th} alt="" loading="lazy" width="320" height="200" /> : <span class="bcard__tile"><b>{big(first(p).value)}</b><i>{first(p).label}</i></span>}
+                </a>
+                <div class="bcard__body">
+                  <h3><a href={`/projects/${p.id}/`}>{p.data.title}</a></h3>
+                  <p>{first(p).label}: <b>{first(p).value}</b></p>
+                  {p.data.demo && <a class="link bench__link" href={`/projects/${p.id}/#demo`}>Run it</a>}
+                </div>
+              </li>
+            );
+          })}
+        </ul>
         <p class="bench__all"><a class="link" href="/projects/">See all projects</a></p>
         <ul class="toolrow" aria-label="Tools I use every day">
           {tools.map((t) => (
@@ -150,3 +143,34 @@ const demoCount = projects.filter((p) => p.data.demo).length;
     </div>
   </footer>
 </Base>
+
+<script>
+  // featured cards: the live demo mounts once, when its card scrolls into view
+  import { registry } from '../demos/registry';
+  document.querySelectorAll<HTMLElement>('[data-live]').forEach((panel) => {
+    const spec = JSON.parse(panel.dataset.live!);
+    new IntersectionObserver((es, o) => {
+      if (!es[0].isIntersecting) return;
+      o.disconnect();
+      void registry[spec.kind]().then((m) => m.mount(panel, spec)).catch(() => {});
+    }, { rootMargin: '150px' }).observe(panel);
+  });
+
+  // lab bench filter: cards that stay glide to their new place (FLIP), the rest fade out or in
+  const grid = document.getElementById('bgrid')!;
+  const cards = [...grid.querySelectorAll<HTMLElement>('.bcard')];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLButtonElement>('.chip').forEach((btn) => btn.addEventListener('click', () => {
+    document.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', String(c === btn)));
+    const want = btn.dataset.filter!;
+    const before = new Map(cards.filter((c) => !c.hidden).map((c) => [c, c.getBoundingClientRect()]));
+    cards.forEach((c) => { c.hidden = want !== 'all' && c.dataset.tab !== want; });
+    if (reduce) return;
+    cards.forEach((c) => {
+      if (c.hidden) return;
+      const was = before.get(c), now = c.getBoundingClientRect();
+      if (!was) c.animate([{ opacity: 0, transform: 'scale(.92)' }, { opacity: 1, transform: 'none' }], { duration: 380, easing: 'cubic-bezier(.2,.7,.2,1)' });
+      else if (was.left !== now.left || was.top !== now.top) c.animate([{ transform: `translate(${was.left - now.left}px, ${was.top - now.top}px)` }, { transform: 'none' }], { duration: 420, easing: 'cubic-bezier(.2,.7,.2,1)' });
+    });
+  }));
+</script>

@@ -1,15 +1,20 @@
 ---
-const { id, head, line } = Astro.props as { id: string; head: string; line: string };
+// A starter card. `live` swaps the still for a small interactive demo that mounts when the card scrolls into view (see index.astro).
+const { id, head, line, live } = Astro.props as { id: string; head: string; line: string; live?: Record<string, unknown> };
 const href = `/projects/${id}/`;
 const kind = id === 'libero-vla-repro' ? 'gif' : 'img';
 ---
 <article class="card card--row card--open span-4">
   <h3><a href={href}>{head}</a></h3>
   <p>{line}</p>
-  <div class={`panel panel--${kind}`}>
-    <a class="m-zoom" href={href} tabindex="-1" aria-hidden="true">
-      {kind === 'gif' && <img class="frame__img" src={`/projects/${id}/rollout.gif`} alt="" loading="lazy" width="160" height="160" />}
-      {kind === 'img' && <img class="frame__img" src={`/projects/${id}/cover.webp`} alt="" loading="lazy" width="1100" height="400" />}
-    </a>
+  <div class={`panel panel--${kind}`} data-live={live ? JSON.stringify(live) : undefined}>
+    {live ? (
+      <img class="frame__img" src={`/projects/${id}/cover.webp`} alt="" loading="lazy" width="1100" height="400" />
+    ) : (
+      <a class="m-zoom" href={href} tabindex="-1" aria-hidden="true">
+        {kind === 'gif' && <img class="frame__img" src={`/projects/${id}/rollout.gif`} alt="" loading="lazy" width="160" height="160" />}
+        {kind === 'img' && <img class="frame__img" src={`/projects/${id}/cover.webp`} alt="" loading="lazy" width="1100" height="400" />}
+      </a>
+    )}
   </div>
 </article>
