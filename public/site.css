@@ -182,3 +182,7 @@ html:not(.js-trace) .trace path { stroke-dashoffset: 0; } html:not(.js-trace) .t
 }
 
 .close__word { line-height: 1.12; padding-bottom: .08em; overflow: visible; }
+
+/* the two overlay lists must not swallow the pointer; only the star links take it */
+.sky__stars, .sky__labels { pointer-events: none; }
+.sky__star { pointer-events: auto; }
