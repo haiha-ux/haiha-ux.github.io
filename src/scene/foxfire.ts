@@ -449,7 +449,7 @@ export function mount(host: HTMLElement) {
     requestAnimationFrame(frame);
     const raw = (now - last) / 1000; last = now;
     if (!st.visible || document.hidden) return;
-    if (first) { first = false; host.classList.add('is-live'); }
+    if (first) { first = false; host.classList.add('is-live'); host.querySelector('.sky__still')?.remove(); }
     const dt = Math.min(0.05, raw);
     if (!st.paused) { st.t += dt; st.intro = clamp(st.intro + Math.min(0.25, raw) / 3.6); }
     draw(dt);
