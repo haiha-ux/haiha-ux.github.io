@@ -27,7 +27,7 @@ const readings = SIGNS.map((name, i) => {
     : bodies.length
     ? `${bodies.map(cap).join(' and ')} here, no project yet.`
     : 'Nothing here.';
-  return { name, bodies, mine, text, href: mine[0] ? `/projects/${mine[0].id}/` : null };
+  return { name, bodies, mine, text, href: mine[0] ? `/projects/${mine[0].id}/` : null, links: JSON.stringify(mine.map((p) => ({ t: p.data.title, h: `/projects/${p.id}/` }))) };
 });
 const dots = NINE.map((b) => ({ b, xy: pol((sky as Record<string, number>)[b], 104), main: b === 'sun' || b === 'jupiter' || b === 'neptune' }));
 const ticks = Array.from({ length: 72 }, (_, i) => {
@@ -43,7 +43,7 @@ const ticks = Array.from({ length: 72 }, (_, i) => {
       </div>
       <div class="about">
         <div class="prose">
-          <div class="about-portrait"><img src="/portrait.webp" alt="Portrait of Hai Ha" width="256" height="256" loading="eager"></div>
+          <div class="about-portrait"><img src="/portrait.webp" alt="Portrait of Hai Ha" width="256" height="256" loading="eager" fetchpriority="high"></div>
           <p>I am Hai, an engineer in Ho Chi Minh City. At my day job I work on perception for UAVs: multi-camera fisheye calibration, depth for obstacle avoidance and quantized models on Qualcomm NPUs. I am also doing an M.Eng. in electronics at Ho Chi Minh City University of Technology. Friends call me Cáo, the fox.</p>
           <p>The repos on this site are things I built to measure something properly. Each one has the raw numbers, the commands to reproduce them and a section on what did not work. Several of those sections report a null result, and I left them in.</p>
           <p>In 2026 I was the AI engineer on a city-scale drone pilot for traffic and urban-order monitoring in Hanoi, covered by <a class="link" href="https://news.laodong.vn/xa-hoi/tuan-tra-bang-uav-buoc-tien-huong-toi-do-thi-an-toan-hien-dai-1742963.ldo">Lao Động</a> and <a class="link" href="https://anninhthudo.vn/cong-an-ha-noi-tuan-tra-bang-uav-make-in-viet-nam-dot-pha-quan-tri-giao-thong-va-trat-tu-do-thi-post660666.antd">An ninh Thủ đô</a>. I also co-authored MARS, a small multi-task Mamba model for mapless UAV navigation (IAAA 2026, Springer LNNS).</p>
@@ -59,7 +59,7 @@ const ticks = Array.from({ length: 72 }, (_, i) => {
             </g>
             <circle cx="250" cy="250" r="114" fill="none" stroke="var(--steel)" stroke-opacity=".35" />
             {readings.map((r, i) => (
-              <a class="dial__a" href={r.href ?? '#dial-read'} data-read={r.text} data-sign={r.name} aria-label={`${r.name}. ${r.text}`}>
+              <a class="dial__a" href={r.href ?? '#dial-read'} data-read={r.text} data-sign={r.name} data-links={r.links} aria-label={`${r.name}. ${r.text}`}>
                 <path class="dial__cell dial__sign" d={wedge(i)} />
                 <text x={f(pol(i * 30 + 15, 188)[0])} y={f(pol(i * 30 + 15, 188)[1] + 4)} text-anchor="middle" fill="var(--steel)" font-family="var(--font-mono)" font-size="13">{r.name.slice(0, 3)}</text>
               </a>
@@ -73,14 +73,24 @@ const ticks = Array.from({ length: 72 }, (_, i) => {
   </main>
 </Base>
 <script>
-  const read = document.getElementById('dial-read');
-  document.querySelectorAll<SVGAElement>('.dial__a').forEach((a) => {
-    const show = () => {
-      if (read) read.innerHTML = `<b>${a.dataset.sign}.</b> ${a.dataset.read}`;
-    };
-    a.addEventListener('pointerenter', show);
-    a.addEventListener('focus', show);
-  });
+  // hovering or focusing a sign lights its arc and lists the projects that sit on it, as links
+  const read = document.getElementById('dial-read')!;
+  const cells = document.querySelectorAll<SVGAElement>('.dial__a');
+  const show = (a: SVGAElement) => {
+    cells.forEach((c) => c.classList.toggle('is-on', c === a));
+    const links: { t: string; h: string }[] = JSON.parse(a.dataset.links || '[]');
+    read.replaceChildren();
+    const b = document.createElement('b');
+    b.textContent = `${a.dataset.sign}. `;
+    read.append(b, a.dataset.read ?? '');
+    if (links.length) {
+      const ul = document.createElement('ul');
+      ul.className = 'dial__list';
+      links.slice(0, 5).forEach((l) => { const li = document.createElement('li'); const x = document.createElement('a'); x.className = 'link'; x.href = l.h; x.textContent = l.t; li.append(x); ul.append(li); });
+      read.append(ul);
+    }
+  };
+  cells.forEach((a) => { a.addEventListener('pointerenter', () => show(a)); a.addEventListener('focus', () => show(a)); });
   const ring = document.querySelector('.dial__ring');
   ring?.addEventListener('pointerenter', () => ring.classList.add('is-paused'));
 </script>

@@ -102,7 +102,7 @@ html:not(.js-trace) .trace path { stroke-dashoffset: 0; } html:not(.js-trace) .t
 .bench:not([hidden]) .rows > li:nth-child(2) { animation-delay: .06s; } .bench:not([hidden]) .rows > li:nth-child(3) { animation-delay: .12s; }
 .bench:not([hidden]) .rows > li:nth-child(4) { animation-delay: .18s; } .bench:not([hidden]) .rows > li:nth-child(n+5) { animation-delay: .24s; }
 @media (prefers-reduced-motion: reduce) { .bench:not([hidden]) .rows > li { animation: none; } }
-.about-portrait { width: min(100%, 280px); aspect-ratio: 1; border-radius: 50%; padding: 4px; background: var(--bg); box-shadow: 0 0 0 2px var(--accent), 0 0 48px 6px rgb(217 174 85 / .4); animation: foxfire-glow 3.6s ease-in-out infinite; margin-bottom: var(--s-6); }
+.about-portrait { width: min(100%, 360px); aspect-ratio: 1; border-radius: 50%; padding: 4px; background: var(--bg); box-shadow: 0 0 0 2px var(--accent), 0 0 48px 6px rgb(217 174 85 / .4); animation: foxfire-glow 3.6s ease-in-out infinite; margin-bottom: var(--s-6); }
 .about-portrait img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
 
 /* ---- inner pages */
@@ -140,10 +140,10 @@ html:not(.js-trace) .trace path { stroke-dashoffset: 0; } html:not(.js-trace) .t
 @keyframes dial-turn { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .dial__ring { animation: none; } }
 .dial__ring.is-paused { animation-play-state: paused; }
-.dial__cell { fill: transparent; stroke: none; cursor: pointer; }
+.dial__cell { fill: transparent; stroke: none; cursor: pointer; pointer-events: all; }
 .dial__sign { fill: none; stroke: var(--steel); stroke-opacity: .5; }
 .dial__a { outline: none; }
-.dial__a:hover .dial__cell, .dial__a:focus-visible .dial__cell { fill: color-mix(in oklab, var(--accent) 22%, transparent); }
+.dial__a:hover .dial__cell, .dial__a:focus-visible .dial__cell, .dial__a.is-on .dial__cell { fill: color-mix(in oklab, var(--accent) 30%, transparent); stroke: var(--accent); stroke-opacity: 1; filter: drop-shadow(0 0 8px rgb(217 174 85 / .6)); }
 .dial__a:focus-visible .dial__cell { stroke: var(--action); stroke-width: 2; }
 .dial__read { min-height: 5.5em; margin-top: var(--s-4); font-size: var(--t-body); }
 .dial__read b { color: var(--accent); font-weight: 500; }
@@ -225,3 +225,7 @@ html:not(.js-trace) .trace path { stroke-dashoffset: 0; } html:not(.js-trace) .t
 .bcard__body b { color: var(--ink); font-weight: 500; }
 @media (prefers-reduced-motion: reduce) { .bcard, #featured .card, .bcard__thumb img, #featured .panel .frame__img { transition: none; } }
 .grid--cards { row-gap: var(--s-7); margin-top: var(--s-6); }
+
+.dial__list { margin: var(--s-2) 0 0; padding: 0; list-style: none; display: grid; gap: 0; }
+.dial__list .link { display: inline-flex; min-height: 32px; align-items: center; }
+.dial__read { min-height: 11em; }
