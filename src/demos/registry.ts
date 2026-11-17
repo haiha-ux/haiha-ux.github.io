@@ -1,6 +1,6 @@
 // kind -> dynamic import. One file per demo kind; a demo is only fetched when the visitor presses "Run it".
-// Phase A ships `iframe`. Later kinds (pcb3d, kicanvas, chart, wilson) add one line here and one file next to it.
-export type DemoKind = 'iframe' | 'pcb3d' | 'kicanvas' | 'chart' | 'wilson';
+// Phase A ships `iframe`. Later kinds (pcb3d, kicanvas, chart, wilson, undistort; built in _site_demos) add one line here and one file next to it.
+export type DemoKind = 'iframe' | 'pcb3d' | 'kicanvas' | 'chart' | 'wilson' | 'undistort';
 export type DemoSpec = { kind: DemoKind; src?: string; title?: string };
 export type DemoMount = (host: HTMLElement, spec: DemoSpec) => void | (() => void);
 

@@ -15,7 +15,7 @@ const projects = defineCollection({
     metrics: z.array(z.object({ label: z.string(), value: z.string() })).default([]),
     demo: z
       .object({
-        kind: z.enum(['iframe', 'pcb3d', 'kicanvas', 'chart', 'wilson']),
+        kind: z.enum(['iframe', 'pcb3d', 'kicanvas', 'chart', 'wilson', 'undistort']),
         src: z.string().optional(),
         title: z.string().optional(),
       })

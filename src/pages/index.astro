@@ -2,7 +2,8 @@
 import Base from '../layouts/Base.astro';
 import Sky from '../components/Sky.astro';
 import Logo from '../components/Logo.astro';
-import LiberoChart from '../components/LiberoChart.astro';
+import FeaturedCard from '../components/FeaturedCard.astro';
+import Trace from '../components/Trace.astro';
 import { allProjects, hasNumbers } from '../lib/projects';
 import { DOMAINS } from '../lib/domains';
 
@@ -31,74 +32,60 @@ const rowsFor = (domains: string[]) => {
 };
 const first = (p: (typeof projects)[number]) => p.data.metrics[0];
 const tools = [
-  { img: 'pytorch', w: 33, name: 'PyTorch', line: 'Diffusion Policy, PPO and an AlphaZero agent, each written from scratch.' },
-  { img: 'nvidia', w: 40, name: 'TensorRT and CUDA', line: 'FP32, FP16 and INT8 engines for YOLO11n, up to 1175 FPS at batch 1.', wide: true },
-  { img: 'onnx', w: 40, name: 'ONNX Runtime', line: 'Four models that run in your browser through onnxruntime-web.' },
-  { img: 'opencv', w: 32, name: 'OpenCV', line: 'Calibration scored on held-out views, and ArUco pose from rendered ground truth.' },
-  { img: 'gstreamer', w: 40, name: 'GStreamer', line: 'RTSP in, NVDEC decode, one batched model call for up to 12 streams.', wide: true },
-  { img: 'kicad', w: 40, name: 'KiCad', line: 'Five boards drawn or converted, with ERC and DRC reports for each.', wide: true },
+  { img: 'pytorch', w: 33, name: 'PyTorch' },
+  { img: 'nvidia', w: 40, name: 'TensorRT and CUDA', wide: true },
+  { img: 'onnx', w: 40, name: 'ONNX Runtime' },
+  { img: 'opencv', w: 32, name: 'OpenCV' },
+  { img: 'gstreamer', w: 40, name: 'GStreamer', wide: true },
+  { img: 'kicad', w: 40, name: 'KiCad', wide: true },
 ];
+const demoCount = projects.filter((p) => p.data.demo).length;
 ---
 <Base title="Hai Ha: vision and AI engineer, projects with raw numbers" description={`Portfolio of Hai Ha, a vision and AI engineer in Ho Chi Minh City. ${count} public projects with raw numbers, from TensorRT benchmarks to KiCad boards.`} home>
   <Fragment slot="head">
     <script is:inline>document.documentElement.classList.add('m-enter');setTimeout(function(){document.documentElement.classList.add('m-enter-done')},700)</script>
     <script is:inline src="/assets/backgrounds/backgrounds.js"></script>
-    <script is:inline>document.documentElement.classList.add('mo-js');setTimeout(function(){document.documentElement.classList.add('mo-safe')},2500)</script>
-    <link rel="modulepreload" href="/assets/moments/moments.js">
-    <link rel="modulepreload" href="/assets/moments/lib.js">
-    <link rel="modulepreload" href="/assets/moments/letters-assemble/moment.js">
-    <link rel="modulepreload" href="/assets/moments/line-carries-colour/moment.js">
   </Fragment>
-  <Fragment slot="plan"><!-- type: software (site-kind software). deal: hero product with a three.js foxfire stage, nav centre, close word, footer columns, rhythm space plus one inverse band, buttons arrow, mark: own fox monogram.
-     moments: letters-assemble in #claims, line-carries-colour in #tools. effect: the nine-tailed foxfire scene in the hero (one WebGL context). --></Fragment>
+  <Fragment slot="plan"><!-- type: software (site-kind software). deal: hero photo layer carrying a three.js foxfire scene (full bleed), nav centre, close word, footer columns, buttons arrow, mark: own fox monogram.
+     effect: the nine-tailed foxfire scene behind the hero words (one WebGL context). No dealt moment: the owner asked for none; motion is the scene, drawn PCB traces, counts and card hovers. --></Fragment>
   <main id="top">
-    <section class="hero hero--product" data-enter aria-labelledby="hero-h">
-      <div class="wrap"><div class="hero-text hero__in">
-        <div class="hero__head">
-          <div>
-            <h1 id="hero-h">Hai Ha, vision and AI engineer</h1>
-            <p class="hero__lead">I get vision models running correctly and fast on the hardware they ship on. {count} public projects, each with raw numbers and a section on what did not work.</p>
-          </div>
+    <section class="hero hero--photo hero--sky" data-calm="left" data-box="none" data-enter aria-labelledby="hero-h">
+      <Sky />
+      <div class="wrap"><div class="hero-text">
+        <div class="hero__text">
+          <a class="portrait" href="/about/" aria-label="About Hai Ha"><img src="/portrait.webp" alt="Portrait of Hai Ha" width="256" height="256" fetchpriority="high"></a>
+          <h1 id="hero-h">Hai Ha, vision and AI engineer</h1>
+          <p class="hero__lead">I get vision models running correctly and fast on the hardware they ship on.</p>
           <div class="btn-row">
             <a class="btn btn--primary" href="#bench">See the projects<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a>
             <a class="btn btn--secondary" href={UPWORK}>Hire me on Upwork</a>
           </div>
         </div>
-        <div class="hero__stage"><Sky /></div>
+        <dl class="hero__facts">
+          <div><dt>Projects with raw numbers</dt><dd data-m-count>{count}</dd></div>
+          <div><dt>Demos in your browser</dt><dd data-m-count>{demoCount}</dd></div>
+          <div><dt>Boards in KiCad</dt><dd data-m-count>5</dd></div>
+        </dl>
       </div></div>
     </section>
 
     <section class="section g2" id="featured" aria-labelledby="featured-h">
+      <Trace variant={0} />
       <div class="wrap">
         <div class="group">
           <div class="section-head"><h2 id="featured-h">Six projects to start with.</h2></div>
           <div class="grid">
-            {featured.slice(0, 3).map((p) => (
-              <article class="card card--row card--open span-4">
-                <h3><a href={`/projects/${p.id}/`}>{heads[p.id] ?? p.data.title}</a></h3>
-                <p>{first(p).label}: {first(p).value}.</p>
-                <div class="panel panel--wide"><a class="m-zoom" href={`/projects/${p.id}/`} tabindex="-1" aria-hidden="true"><img class="frame__img" src={`/projects/${p.id}/cover.webp`} alt="" loading="lazy" width="1100" height="400"></a></div>
-              </article>
-            ))}
+            {featured.slice(0, 3).map((p) => <FeaturedCard id={p.id} head={heads[p.id] ?? p.data.title} line={`${first(p).label}: ${first(p).value}.`} />)}
           </div>
         </div>
         <div class="grid">
-          {featured.slice(3, 6).map((p) => (
-            <article class="card card--row card--open span-4">
-              <h3><a href={`/projects/${p.id}/`}>{heads[p.id] ?? p.data.title}</a></h3>
-              <p>{first(p).label}: {first(p).value}.</p>
-              <div class="panel panel--wide">
-                {p.id === 'libero-vla-repro'
-                  ? <a class="m-zoom lib-wrap" href={`/projects/${p.id}/`} tabindex="-1" aria-hidden="true"><LiberoChart /></a>
-                  : <a class="m-zoom" href={`/projects/${p.id}/`} tabindex="-1" aria-hidden="true"><img class="frame__img" src={`/projects/${p.id}/cover.webp`} alt="" loading="lazy" width="1100" height="400"></a>}
-              </div>
-            </article>
-          ))}
+          {featured.slice(3, 6).map((p) => <FeaturedCard id={p.id} head={heads[p.id] ?? p.data.title} line={`${first(p).label}: ${first(p).value}.`} />)}
         </div>
       </div>
     </section>
 
     <section class="section" id="bench" style="--hm: 2" aria-labelledby="bench-h">
+      <Trace variant={1} />
       <div class="wrap">
         <div class="section-head"><h2 id="bench-h">{projects.length} projects on the lab bench.</h2></div>
         <div class="tabs" role="tablist" aria-label="Filter by trade">
@@ -125,29 +112,14 @@ const tools = [
           );
         })}
         <p class="bench__all"><a class="link" href="/projects/">See all projects</a></p>
-      </div>
-    </section>
-
-    <section class="section" id="claims" data-moment="letters-assemble" data-moment-opts='{"spread": 1}' aria-labelledby="claims-h">
-      <div class="wrap">
-        <h2 id="claims-h" class="mo-la__type claims__type">Every claim has a number</h2>
-        <p class="mo-la__sub claims__sub">Each repo ships its raw data, the command that reproduces the result and a section on what did not work. Where a result is null or negative, I say so first.</p>
-      </div>
-    </section>
-
-    <section class="section ground-inverse" id="tools" data-moment="line-carries-colour" data-moment-opts='{"from": "base"}' aria-labelledby="tools-h">
-      <div class="wrap">
-        <div class="section-head"><h2 id="tools-h">Tools I use every day.</h2></div>
-        <ul class="rows tools">
+        <ul class="toolrow" aria-label="Tools I use every day">
           {tools.map((t) => (
-            <li>
-              <span class="rows__name"><span class="ic-chip ic-chip--lg"><img class={`ic ic-40${t.wide ? ' ic-wide' : ''}`} src={`/assets/icons/${t.img}.svg`} alt="" width={t.w} height={t.wide ? 12 : 40}>{t.name}</span></span>
-              <p>{t.line}</p>
-            </li>
+            <li><span class="ic-chip ic-chip--lg"><img class={`ic ic-40${t.wide ? ' ic-wide' : ''}`} src={`/assets/icons/${t.img}.svg`} alt="" width={t.w} height={t.wide ? 12 : 40}>{t.name}</span></li>
           ))}
         </ul>
       </div>
     </section>
+
   </main>
 
   <footer class="footer closing" id="contact" aria-labelledby="close-h" slot="footer">

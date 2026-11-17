@@ -15,10 +15,10 @@ const orbIn: OrbIn[] = projects.map((p) => ({
 }));
 const orbs = layoutOrbs(orbIn);
 
-// Still views: desktop stage 1280x566 and phone stage 342x394, same geometry as the live scene at rest.
+// Still views: a 1440x900 hero and a 390x355 phone strip, same geometry as the live scene at rest.
 const VIEWS = [
-  { id: 'wide', aspect: 1280 / 566 },
-  { id: 'tall', aspect: 342 / 394 },
+  { id: 'wide', aspect: 1440 / 900 },
+  { id: 'tall', aspect: 390 / 355 },
 ];
 const W = 1000;
 const fmt = (n: number) => n.toFixed(1);
@@ -52,7 +52,7 @@ const pct = (xy: [number, number], H: number) => `${(xy[0] / W * 100).toFixed(2)
 const pcty = (xy: [number, number], H: number) => `${(xy[1] / H * 100).toFixed(2)}%`;
 const payload = JSON.stringify(orbs.map((o) => ({ slug: o.slug, title: o.title, domain: o.domain, body: o.body, metric: o.metric, featured: o.featured, order: o.order })));
 ---
-<div class="sky" id="sky" data-sky data-orbs={payload}>
+<div class="sky hero__bg" id="sky" data-sky data-orbs={payload}>
   <div class="sky__still" aria-hidden="true">
     {views.map((v) => (
       <svg class={`sky__svg sky__svg--${v.id}`} viewBox={`0 0 ${W} ${fmt(v.H)}`} preserveAspectRatio="xMidYMid meet" focusable="false">

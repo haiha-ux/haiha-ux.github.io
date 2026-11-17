@@ -36,7 +36,7 @@ export const tailOf = (b: Body) => TAILS.find((t) => t.body === b)!;
 /** Point on a tail, u in 0..1 from the head; sway is a sideways push that grows towards the tip. */
 export function tailPoint(t: Tail, u: number, sway = 0): V3 {
   const dx = Math.sin(t.theta), dy = Math.cos(t.theta);
-  const side = Math.sin(Math.PI * u) * t.curl * 0.18 * t.len + sway * u * u * 0.7;
+  const side = Math.sin(Math.PI * u) * t.curl * 0.3 * t.len + sway * u * u * 0.7;
   const lift = 0.35 * t.len * u * u * Math.abs(dx);
   return [HEAD[0] + dx * t.len * u + dy * side, HEAD[1] + dy * t.len * u - dx * side + lift, HEAD[2] + t.depth * u];
 }
@@ -65,16 +65,23 @@ export function orbPos(o: Orb, sway = 0): V3 {
   return [p[0] + nx * o.off, p[1] + ny * o.off, p[2] + o.zoff];
 }
 
+/** The constellation sits right of centre on a wide hero (the words take the left), centred on a narrow one. */
+export function viewShift(aspect: number): [number, number] {
+  const k = Math.min(1, Math.max(0, (aspect - 1.25) / 0.4));
+  return [1.2 * k, -0.2];
+}
+
 export function camDist(aspect: number): number {
   const th = Math.tan((FOV / 2) * (Math.PI / 180));
-  return Math.max(2.45 / th, 3.7 / (aspect * th)) + 0.2;
+  return Math.max(2.05 / th, (3.0 + viewShift(aspect)[0]) / (aspect * th)) + 0.2;
 }
 
 /** Perspective projection for a camera at (0,0,dist) looking down -z, returns percent of the box. */
 export function projectStill(p: V3, aspect: number): [number, number] {
   const th = Math.tan((FOV / 2) * (Math.PI / 180));
+  const [sx, sy] = viewShift(aspect);
   const zc = camDist(aspect) - p[2];
-  const x = p[0] / (zc * th * aspect), y = p[1] / (zc * th);
+  const x = (p[0] + sx) / (zc * th * aspect), y = (p[1] + sy) / (zc * th);
   return [50 + x * 50, 50 - y * 50];
 }
 

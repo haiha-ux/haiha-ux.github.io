@@ -6,14 +6,14 @@ import {
   LineBasicMaterial, Line, LineLoop, LineSegments, Points, ShaderMaterial, AdditiveBlending, Vector3, Color,
 } from 'three';
 import {
-  TAILS, FOV, FOX_LINES, DIAL, dialPoint, tailPoint, layoutOrbs, orbPos, camDist, type OrbIn, type Orb, type V3,
+  TAILS, FOV, FOX_LINES, dialPoint, tailPoint, layoutOrbs, orbPos, camDist, viewShift, type OrbIn, type Orb, type V3,
 } from '../lib/foxsky';
 
 const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const smooth = (a: number, b: number, v: number) => { const t = clamp((v - a) / (b - a)); return t * t * (3 - 2 * t); };
 const ease = (t: number) => 1 - Math.pow(1 - t, 3);
 const GOLD = new Color('#d9ae55'), STEEL = new Color('#9db2bc');
-const TRAIL = 56, EMBERS = 240;
+const TRAIL = 56, EMBERS = 460;
 
 const POINT_VS = /* glsl */ `
   uniform float uK; uniform float uTime; uniform float uPx;
@@ -31,27 +31,27 @@ const POINT_FS = /* glsl */ `
   uniform vec3 uColor; varying float vLit; varying float vSeed; varying float vHover;
   void main() {
     vec2 c = gl_PointCoord - 0.5; float d = length(c) * 2.0;
-    float core = smoothstep(0.38, 0.0, d); float halo = pow(max(0.0, 1.0 - d), 2.2);
+    float core = smoothstep(0.3, 0.0, d); float halo = pow(max(0.0, 1.0 - d), 1.7);
     vec3 col = mix(uColor, vec3(1.0, 0.94, 0.74), core * (0.6 + vHover * 0.4));
-    float a = (halo * 0.75 + core) * vLit;
+    float a = (halo * 0.85 + core) * vLit;
     gl_FragColor = vec4(col * a, a);
   }`;
 const EMBER_VS = /* glsl */ `
-  uniform float uK; uniform float uTime; uniform float uPx; uniform vec3 uPointer; uniform float uGather; uniform float uIntro;
+  uniform float uK; uniform float uTime; uniform float uPx; uniform vec3 uPointer; uniform float uGather; uniform float uIntro; uniform vec2 uSpan;
   attribute float aSize; attribute float aSeed; attribute vec3 aBase;
   varying float vLit; varying float vSeed; varying float vHover;
   void main() {
-    float cyc = fract(uTime * (0.015 + aSeed * 0.02) + aSeed * 7.0);
-    vec3 p = aBase; p.y += cyc * 1.3; p.x += sin(uTime * 0.5 + aSeed * 30.0) * 0.12;
+    float f = fract(aBase.y + uTime * (0.012 + aSeed * 0.018));
+    vec3 p = vec3(aBase.x * uSpan.x, (f - 0.5) * uSpan.y, aBase.z * 2.4);
+    p.x += sin(uTime * 0.45 + aSeed * 30.0) * 0.16;
     vec3 to = uPointer - p; float dist = length(to.xy);
-    float pull = uGather * smoothstep(1.8, 0.0, dist);
-    p.xy += normalize(to.xy + 0.0001) * pull * min(dist, 0.9) * 0.85;
+    float pull = uGather * smoothstep(2.6, 0.0, dist);
+    p.xy += normalize(to.xy + 0.0001) * pull * min(dist, 1.3) * 0.9;
     vec4 mv = modelViewMatrix * vec4(p, 1.0);
-    gl_PointSize = aSize * (1.0 + pull * 1.4) * uK * uPx / -mv.z;
+    gl_PointSize = aSize * (1.0 + pull * 1.6) * uK * uPx / -mv.z;
     gl_Position = projectionMatrix * mv;
-    vLit = smoothstep(0.0, 0.12, cyc) * smoothstep(1.0, 0.6, cyc) * (0.35 + pull * 0.9) * uIntro; vSeed = aSeed; vHover = pull;
+    vLit = smoothstep(0.0, 0.1, f) * smoothstep(1.0, 0.7, f) * (0.4 + pull * 0.9) * uIntro; vSeed = aSeed; vHover = pull;
   }`;
-
 function pointsMat(vs: string, extra: Record<string, { value: unknown }> = {}) {
   return new ShaderMaterial({
     vertexShader: vs, fragmentShader: POINT_FS, transparent: true, depthWrite: false, blending: AdditiveBlending,
@@ -106,7 +106,7 @@ export function mount(host: HTMLElement) {
   const trailGeo = new BufferGeometry();
   trailGeo.setAttribute('position', new BufferAttribute(new Float32Array(trailN * 3), 3));
   const tSize = new Float32Array(trailN), tLit = new Float32Array(trailN), tSeed = new Float32Array(trailN), tHover = new Float32Array(trailN);
-  TAILS.forEach((t, k) => { for (let i = 0; i < TRAIL; i++) { const n = k * TRAIL + i, u = i / (TRAIL - 1); tSize[n] = (t.main ? 0.085 : 0.05) * (1 - 0.5 * u) + 0.02; tSeed[n] = ((n * 97) % 101) / 101; } });
+  TAILS.forEach((t, k) => { for (let i = 0; i < TRAIL; i++) { const n = k * TRAIL + i, u = i / (TRAIL - 1); tSize[n] = (t.main ? 0.12 : 0.06) * (1 - 0.45 * u) + 0.025; tSeed[n] = ((n * 97) % 101) / 101; } });
   trailGeo.setAttribute('aSize', new BufferAttribute(tSize, 1)); trailGeo.setAttribute('aLit', new BufferAttribute(tLit, 1));
   trailGeo.setAttribute('aSeed', new BufferAttribute(tSeed, 1)); trailGeo.setAttribute('aHover', new BufferAttribute(tHover, 1));
   const trailMat = pointsMat(POINT_VS);
@@ -117,30 +117,27 @@ export function mount(host: HTMLElement) {
   const oGeo = new BufferGeometry();
   oGeo.setAttribute('position', new BufferAttribute(new Float32Array(oN * 3), 3));
   const oSize = new Float32Array(oN), oLit = new Float32Array(oN), oSeed = new Float32Array(oN), oHover = new Float32Array(oN);
-  orbs.forEach((o, i) => { oSize[i] = o.featured ? 0.42 : 0.3; oSeed[i] = ((i * 53) % 29) / 29; });
+  orbs.forEach((o, i) => { oSize[i] = o.featured ? 0.62 : 0.42; oSeed[i] = ((i * 53) % 29) / 29; });
   oGeo.setAttribute('aSize', new BufferAttribute(oSize, 1)); oGeo.setAttribute('aLit', new BufferAttribute(oLit, 1));
   oGeo.setAttribute('aSeed', new BufferAttribute(oSeed, 1)); oGeo.setAttribute('aHover', new BufferAttribute(oHover, 1));
   const orbMat = pointsMat(POINT_VS);
   const orbPoints = new Points(oGeo, orbMat); orbPoints.frustumCulled = false; root.add(orbPoints);
-
-  // --- tail tips without a project: a small ember
-  const bare = TAILS.filter((t) => !orbs.some((o) => o.body === t.body));
 
   // --- embers that the pointer gathers
   const eGeo = new BufferGeometry();
   const eBase = new Float32Array(EMBERS * 3), eSize = new Float32Array(EMBERS), eSeed = new Float32Array(EMBERS);
   for (let i = 0; i < EMBERS; i++) {
     const r = (n: number) => { const x = Math.sin(i * 12.9898 + n * 78.233) * 43758.5453; return x - Math.floor(x); };
-    eBase[i * 3] = (r(1) - 0.5) * 7.4; eBase[i * 3 + 1] = -2 + r(2) * 3.2; eBase[i * 3 + 2] = (r(3) - 0.5) * 2.4;
-    eSize[i] = 0.05 + r(4) * 0.09; eSeed[i] = r(5);
+    eBase[i * 3] = r(1) - 0.5; eBase[i * 3 + 1] = r(2); eBase[i * 3 + 2] = r(3) - 0.5;
+    eSize[i] = 0.06 + r(4) * 0.12; eSeed[i] = r(5);
   }
   eGeo.setAttribute('position', new BufferAttribute(new Float32Array(EMBERS * 3), 3));
   eGeo.setAttribute('aBase', new BufferAttribute(eBase, 3)); eGeo.setAttribute('aSize', new BufferAttribute(eSize, 1)); eGeo.setAttribute('aSeed', new BufferAttribute(eSeed, 1));
   const eMat = new ShaderMaterial({
     vertexShader: EMBER_VS, fragmentShader: POINT_FS, transparent: true, depthWrite: false, blending: AdditiveBlending,
-    uniforms: { uK: { value: 1 }, uTime: { value: 0 }, uPx: { value: 1 }, uColor: { value: new Color('#e8c474') }, uPointer: { value: new Vector3() }, uGather: { value: 0 }, uIntro: { value: 0 } },
+    uniforms: { uK: { value: 1 }, uTime: { value: 0 }, uPx: { value: 1 }, uColor: { value: new Color('#e8c474') }, uPointer: { value: new Vector3() }, uGather: { value: 0 }, uIntro: { value: 0 }, uSpan: { value: [10, 6] } },
   });
-  const embers = new Points(eGeo, eMat); embers.frustumCulled = false; root.add(embers);
+  const embers = new Points(eGeo, eMat); embers.frustumCulled = false; scene.add(embers);
 
   // --- hover links: from the flame under the pointer to the others of its trade
   const linkGeo = new BufferGeometry();
@@ -165,6 +162,9 @@ export function mount(host: HTMLElement) {
     st.w = Math.max(1, Math.round(r.width)); st.h = Math.max(1, Math.round(r.height)); st.aspect = st.w / st.h;
     renderer.setSize(st.w, st.h, false);
     camera.aspect = st.aspect; camera.updateProjectionMatrix();
+    const [sx, sy] = viewShift(st.aspect); root.position.set(sx, sy, 0);
+    const visH = 2 * camDist(st.aspect) * Math.tan((FOV / 2) * (Math.PI / 180));
+    eMat.uniforms.uSpan.value = [visH * st.aspect * 1.15, visH * 1.2];
     const K = (st.h * dpr) / (2 * Math.tan((FOV / 2) * (Math.PI / 180)));
     for (const m of [trailMat, orbMat, eMat]) { m.uniforms.uK.value = K / dpr; m.uniforms.uPx.value = dpr; }
   }
@@ -227,6 +227,7 @@ export function mount(host: HTMLElement) {
     requestAnimationFrame(frame);
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
     if (!st.visible || document.hidden) return;
+    if (first) { first = false; host.classList.add('is-live'); }
     if (!st.paused) { st.t += dt; st.intro = clamp(st.intro + dt / 3.4); }
     const t = st.t, I = st.intro;
 
@@ -258,7 +259,7 @@ export function mount(host: HTMLElement) {
       for (let i = 0; i < TRAIL; i++) {
         const n = k * TRAIL + i, u = i / (TRAIL - 1), q = tailPoint(tl, u, st.sway[k]);
         (trailGeo.getAttribute('position') as BufferAttribute).setXYZ(n, q[0], q[1], q[2]);
-        tLit[n] = smooth(u - 0.02, u, p) * (tl.main ? 0.5 : 0.2) * (1 - 0.35 * u);
+        tLit[n] = smooth(u - 0.02, u, p) * (tl.main ? 0.75 : 0.28) * (1 - 0.35 * u);
       }
     });
     (trailGeo.getAttribute('position') as BufferAttribute).needsUpdate = true; (trailGeo.getAttribute('aLit') as BufferAttribute).needsUpdate = true;
@@ -302,7 +303,7 @@ export function mount(host: HTMLElement) {
     camera.lookAt(lookAt);
 
     for (const m of [trailMat, orbMat, eMat]) m.uniforms.uTime.value = t;
-    eMat.uniforms.uPointer.value.copy(st.pointerLocal); eMat.uniforms.uGather.value = st.gather; eMat.uniforms.uIntro.value = smooth(0.05, 0.5, I);
+    eMat.uniforms.uPointer.value.set(wx, wy, 0); eMat.uniforms.uGather.value = st.gather; eMat.uniforms.uIntro.value = smooth(0.05, 0.5, I);
     ring.material.opacity = 0.5 * smooth(0, 0.3, I); innerRing.material.opacity = 0.2 * smooth(0, 0.3, I); ticks.material.opacity = 0.6 * smooth(0, 0.3, I); fox.material.opacity = 0.9 * smooth(0.3, 0.7, I);
     renderer.render(scene, camera);
 
@@ -311,7 +312,9 @@ export function mount(host: HTMLElement) {
     orbs.forEach((o, i) => {
       const li = lis.get(o.slug); if (!li) return;
       tmp.copy(orbPosNow[i]).applyMatrix4(root.matrixWorld).project(camera);
-      li.style.transform = `translate(${((tmp.x + 1) / 2) * st.w}px, ${((1 - tmp.y) / 2 * st.h)}px)`;
+      const sx = ((tmp.x + 1) / 2) * st.w, sy = ((1 - tmp.y) / 2) * st.h;
+      li.style.transform = `translate(${sx}px, ${sy}px)`;
+      li.classList.toggle('is-left', sx > st.w * 0.78); li.classList.toggle('is-right', sx < st.w * 0.22); li.classList.toggle('is-low', sy < 96);
     });
     labelEls.forEach((el) => {
       const tl = TAILS.find((x) => x.body === el.dataset.body)!; const k = TAILS.indexOf(tl);
@@ -319,9 +322,6 @@ export function mount(host: HTMLElement) {
       el.style.transform = `translate(${((tmp.x + 1) / 2) * st.w}px, ${((1 - tmp.y) / 2) * st.h}px)`;
       el.style.opacity = String(smooth(0.55, 0.9, I));
     });
-    // bare tips
-    if (first) { first = false; host.classList.add('is-live'); }
   }
-  void bare;
   requestAnimationFrame(frame);
 }
