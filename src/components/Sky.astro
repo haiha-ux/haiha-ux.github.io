@@ -40,8 +40,8 @@ const payload = JSON.stringify(orbs.map((o) => ({ slug: o.slug, title: o.title, 
 ---
 <div class="sky hero__bg" id="sky" data-sky data-orbs={payload}>
   <div class="sky__still" aria-hidden="true">
-    <img class="sky__svg sky__svg--wide" src="/sky-wide.png" alt="" width="1440" height="900" decoding="async">
-    <img class="sky__svg sky__svg--tall" src="/sky-tall.png" alt="" width="390" height="355" decoding="async">
+    <img class="sky__svg sky__svg--wide" src="/sky-wide.webp" alt="" width="1440" height="900" decoding="async">
+    <img class="sky__svg sky__svg--tall" src="/sky-tall.webp" alt="" width="390" height="355" decoding="async">
   </div>
   <ul class="sky__stars" aria-label="Projects on the constellation">
     {views[0].orbPts.map(({ o }, i) => (
