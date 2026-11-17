@@ -6,6 +6,7 @@ import FeaturedCard from '../components/FeaturedCard.astro';
 import fs from 'node:fs';
 import { allProjects, hasNumbers } from '../lib/projects';
 import { DOMAINS } from '../lib/domains';
+import { v } from '../lib/assetv';
 
 const projects = await allProjects();
 const count = projects.filter(hasNumbers).length;
@@ -40,7 +41,7 @@ const demoCount = projects.filter((p) => p.data.demo).length;
 <Base title="Hai Ha: vision and AI engineer, projects with raw numbers" description={`Portfolio of Hai Ha, a vision and AI engineer in Ho Chi Minh City. ${count} public projects with raw numbers, from TensorRT benchmarks and AlphaZero self-play to Diffusion Policy and KiCad boards.`} home>
   <Fragment slot="head">
     <script is:inline>document.documentElement.classList.add('m-enter');setTimeout(function(){document.documentElement.classList.add('m-enter-done')},700)</script>
-    <script is:inline src="/assets/backgrounds/backgrounds.js"></script>
+    <script is:inline src={v("/assets/backgrounds/backgrounds.js")}></script>
   </Fragment>
   <Fragment slot="plan"><!-- type: software (site-kind software). deal: hero photo layer carrying a three.js foxfire scene (full bleed), nav centre, close word, footer columns, buttons arrow, mark: own fox monogram.
      effect: the nine-tailed foxfire scene behind the hero words (one WebGL context). One moment: word-highlight on the short statement. Motion is the scene, the statement, counts and card hovers. --></Fragment>
