@@ -326,3 +326,29 @@ main > .statement > .wrap { justify-content: flex-start; padding-top: var(--s-7)
   .toolgroup__img { height: 110px; }
   .toolgroup__body { padding: var(--s-3) 0; gap: var(--s-2); }
 }
+
+/* ---- view transitions between pages: the project title morphs from the clicked flame or card (names are set in Base.astro) */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  ::view-transition-group(proj-title) { animation-duration: .5s; animation-timing-function: var(--ease, ease); }
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: .3s; }
+}
+
+/* ---- phone: a fixed contact bar for people hiring (CV, Upwork, GitHub); hidden while the menu sheet is open and in print */
+.quickbar { display: none; }
+@media (max-width: 768px) {
+  body { padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
+  .quickbar {
+    position: fixed; z-index: 40; left: 0; right: 0; bottom: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+    padding-bottom: env(safe-area-inset-bottom); background: var(--line-strong, #3a352c);
+    border-top: 1px solid var(--line-strong, #3a352c);
+  }
+  .quickbar a { display: flex; align-items: center; justify-content: center; min-height: 48px; background: color-mix(in oklab, var(--bg, #14120f) 94%, transparent); color: var(--ink); font: 500 var(--t-small, 14px)/1 var(--font-text); text-decoration: none; }
+  .quickbar a:first-child { background: var(--action); color: var(--action-ink, #14120f); }
+  .quickbar a:focus-visible { outline: 2px solid var(--action); outline-offset: -3px; }
+  body:has(.nav.is-open) .quickbar { display: none; }
+}
+@media print { .quickbar { display: none !important; } }
+
+/* the fox's nose reaches the second headline line from 1281px up: a smaller headline keeps ~60px clear of it */
+@media (min-width: 1281px) and (min-height: 821px) { .hero--sky h1 { font-size: clamp(44px, 5.3vw, 80px); } }

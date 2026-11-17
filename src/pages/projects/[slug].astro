@@ -12,7 +12,7 @@ export async function getStaticPaths() {
 const { p, prev, next } = Astro.props;
 const { Content } = await render(p);
 const d = p.data;
-const cover = fs.existsSync(`public/projects/${p.id}/cover.webp`) ? `/projects/${p.id}/cover.webp` : null;
+const cover = fs.existsSync(`public/projects/${p.id}/cover.webp`) ? `/projects/${p.id}/cover.webp` : (typeof d.demo?.props?.fallback === 'string' ? d.demo.props.fallback : null);
 const repoUrl = `https://github.com/haiha-ux/${d.repo}`;
 ---
 <Base title={`${d.title}: Hai Ha`} description={d.summary.split('. ')[0] + '.'} current="projects">
@@ -77,6 +77,6 @@ const repoUrl = `https://github.com/haiha-ux/${d.repo}`;
       }
     };
     run.addEventListener('click', start);
-    if (root.dataset.demoKind !== 'iframe') new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { o.disconnect(); void start(); } }, { rootMargin: '200px' }).observe(root);
+    if (root.dataset.demoKind !== 'iframe') new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { o.disconnect(); void start(); } }, { threshold: 0.2 }).observe(host);
   }
 </script>

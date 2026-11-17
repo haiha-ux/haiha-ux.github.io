@@ -70,6 +70,13 @@ const UPWORK = 'https://www.upwork.com/freelancers/~0101fb6cf6eb992555';
   </div>
 </header>
 <slot />
+{current !== 'cv' && (
+  <nav class="quickbar" aria-label="Contact">
+    <a href="/quick/">CV</a>
+    <a href={UPWORK}>Upwork</a>
+    <a href="https://github.com/haiha-ux">GitHub</a>
+  </nav>
+)}
 <slot name="footer">
 <footer class="footer footer--page">
   <div class="wrap">
@@ -98,6 +105,35 @@ document.querySelectorAll('.numbers').forEach(function (b) {
     b.setAttribute('aria-expanded', String(!open));
     if (n) n.hidden = open;
   });
+});
+</script>
+<script is:inline>
+// "See the projects": warm the fox model on hover or focus so the hero scene appears at once (home asks the scene to start too)
+(function () {
+  var done = false;
+  function warm() {
+    if (done) return;
+    done = true;
+    var l = document.createElement('link');
+    l.rel = 'prefetch'; l.href = '/fox.glb'; l.as = 'fetch'; l.crossOrigin = 'anonymous';
+    document.head.appendChild(l);
+    document.dispatchEvent(new Event('fox-warm'));
+  }
+  document.querySelectorAll('a.btn[href$="#bench"]').forEach(function (a) {
+    ['pointerenter', 'focus', 'touchstart'].forEach(function (e) { a.addEventListener(e, warm, { passive: true, once: true }); });
+  });
+})();
+// view transitions between documents: the clicked project link and the project page title share one name, so the title morphs
+addEventListener('pageswap', function (e) {
+  var to = e.activation && e.activation.entry && new URL(e.activation.entry.url).pathname.match(/^\/projects\/[^/]+\/$/);
+  if (!e.viewTransition || !to) return;
+  var links = document.querySelectorAll('a[href="' + to[0] + '"]'), pick = null;
+  for (var i = 0; i < links.length && !pick; i++) { var r = links[i].getBoundingClientRect(); if (r.width && r.bottom > 0 && r.top < innerHeight && (links[i].classList.contains('sky__star') || links[i].textContent.trim())) pick = links[i]; }
+  if (pick) (pick.querySelector('.sky__tip b') || pick).style.viewTransitionName = 'proj-title';
+});
+addEventListener('pagereveal', function (e) {
+  var h = e.viewTransition && document.querySelector('main .page__head h1');
+  if (h) h.style.viewTransitionName = 'proj-title';
 });
 </script>
 <script is:inline type="module" src="/assets/system.js"></script>
