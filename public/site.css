@@ -302,13 +302,13 @@ main > .statement > .wrap { justify-content: flex-start; padding-top: var(--s-7)
 @media (max-width: 639px) { .fill.grid--cards { grid-auto-rows: auto; } .fill.grid--cards > .card { min-height: auto; } }
 @media (max-width: 1279px) { main > .section > .wrap > .fill { flex: 1 0 auto; } }
 
-/* ---- the toolbox: one panel, four rows (name on the left, the tools as chips on the right) */
-.toolgrid { display: grid; grid-template-columns: minmax(0, 1fr); grid-auto-rows: 1fr; margin-top: var(--s-5); min-height: 0; border: 1px solid var(--line); background: var(--surface); }
-.toolgroup { display: grid; align-items: center; min-width: 0; min-height: 0; padding: var(--s-5) var(--s-6); }
-.toolgroup + .toolgroup { border-top: 1px solid var(--line); }
-.toolgroup__body { display: grid; grid-template-columns: minmax(150px, 22%) minmax(0, 1fr); align-items: center; gap: var(--s-5); min-width: 0; }
+/* ---- the toolbox: four ruled rows on the page grid (name on columns 1-4, the tools as chips from column 5) */
+.toolgrid { display: grid; grid-template-columns: minmax(0, 1fr); grid-auto-rows: 1fr; margin-top: var(--s-5); min-height: 0; border-bottom: 1px solid var(--line); }
+.toolgroup { display: grid; align-items: center; min-width: 0; min-height: 0; padding: var(--s-4) 0; border-top: 1px solid var(--line); }
+.toolgroup__body { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); align-items: center; min-width: 0; }
+.toolgroup__body > .toolgroup__n { grid-column: 1 / span 4; }
+.toolgroup__body > .toolrow { grid-column: 5 / -1; }
 .toolgroup__n { color: var(--accent); font: 500 var(--t-small)/1.2 var(--font-mono); letter-spacing: .02em; }
-.tools .toolgroup .ic-chip { background: var(--bg); }
 .tools .toolrow { display: flex; flex-wrap: wrap; gap: var(--s-3); margin: 0; padding: 0; list-style: none; }
 .tools .ic-chip { max-width: 100%; }
 .bench__all { margin-top: var(--s-5); }
@@ -320,7 +320,7 @@ main > .statement > .wrap { justify-content: flex-start; padding-top: var(--s-7)
   .tools .ic-chip--lg > .ic { --ic-s: 18px; }
 }
 @media (max-width: 639px) { .tools .ic-chip--lg { height: 34px; } .tools .ic-dark .ic-chip > img.ic { padding: 1px; } }
-@media (max-width: 899px) { .toolgroup__body { grid-template-columns: minmax(0, 1fr); gap: var(--s-3); } .toolgroup { padding: var(--s-4); } }
+@media (max-width: 899px) { .toolgroup__body { grid-template-columns: minmax(0, 1fr); row-gap: var(--s-3); } .toolgroup__body > .toolgroup__n, .toolgroup__body > .toolrow { grid-column: 1; } .toolgroup { padding: var(--s-3) 0; } }
 
 /* ---- view transitions between pages: the project title morphs from the clicked flame or card (names are set in Base.astro) */
 @media (prefers-reduced-motion: no-preference) {
