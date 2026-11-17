@@ -26,7 +26,7 @@ const big = (m: { value: string; hero?: string }) => {
   const x = m.value.match(/^(\d[\d.]*%?)(?:\s+(?!and\b|of\b|vs\b|to\b)([A-Za-z]{2,}))?/);
   return x ? [x[1], x[2]].filter(Boolean).join(' ') : m.value.split(/[,;]/)[0].slice(0, 16);
 };
-const THUMBS = ['cover.webp', 'fallback.png', 'left02.jpg', 'rollout.gif'];
+const THUMBS = ['cover.webp', 'fallback.webp', 'left02.jpg', 'rollout.gif'];
 const thumbOf = (id: string) => { const f = THUMBS.find((n) => fs.existsSync(`public/projects/${id}/${n}`)); return f ? `/projects/${id}/${f}` : null; };
 const first = (p: (typeof projects)[number]) => p.data.metrics[0];
 const tools = [

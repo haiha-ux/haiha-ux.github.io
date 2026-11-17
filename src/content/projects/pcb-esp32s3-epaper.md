@@ -7,7 +7,7 @@ metrics:
   - { label: "Board", value: "72 x 48 mm, 4 layers" }
   - { label: "Sleep current on paper", value: "about 13 uA typical" }
   - { label: "Runtime on paper", value: "about 5 weeks, one fetch every 10 minutes" }
-demo: { kind: pcb3d, props: { src: "/projects/pcb-esp32s3-epaper/board.glb", fallback: "/projects/pcb-esp32s3-epaper/fallback.png", title: "ESP32-S3 e-paper board" } }
+demo: { kind: pcb3d, props: { src: "/projects/pcb-esp32s3-epaper/board.glb", fallback: "/projects/pcb-esp32s3-epaper/fallback.webp", title: "ESP32-S3 e-paper board" } }
 star: { planet: neptune }
 year: 2026
 featured: true

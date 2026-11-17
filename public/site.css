@@ -282,3 +282,14 @@ main > #featured > .wrap, main > #bench > .wrap { height: auto; }
 .toolrow { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
 
 .hero--sky .hero__facts dt { color: var(--ink); }
+
+/* the three hero figures sit in the normal flow under the buttons (the kit pins them to the section floor, over the words) */
+.hero--photo.hero--sky[data-calm] .hero__facts { position: static; margin: var(--s-6) 0 0; }
+.hero--sky .hero-text { gap: var(--s-2); }
+@media (max-height: 820px) and (min-width: 640px) { .portrait { width: 72px; height: 72px; } .hero--sky .hero__text { gap: var(--s-4); } .hero--photo.hero--sky[data-calm] .hero__facts { margin-top: var(--s-5); } .hero--sky h1 { font-size: clamp(40px, 5.2vw, 76px); } }
+/* demos never push a phone sideways */
+.dm, .dm select, .dm label { min-width: 0; max-width: 100%; }
+.dm .dm-row { min-width: 0; }
+@media (min-width: 640px) { .hero--photo.hero--sky[data-calm] .hero__facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-6); width: 100%; } }
+@media (min-width: 640px) { .hero--photo.hero--sky[data-calm] .hero__facts > * { grid-column: auto; } }
+.demo { grid-template-columns: minmax(0, 1fr); } .demo > * { min-width: 0; }

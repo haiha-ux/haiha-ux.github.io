@@ -59,11 +59,10 @@ const payload = JSON.stringify(orbs.map((o) => ({ slug: o.slug, title: o.title, 
   <button class="sky__pause" type="button" aria-pressed="false" hidden>Pause motion</button>
 </div>
 <script>
-  // three.js is fetched after first paint; the PNG above is the poster and the fallback. Reduced motion renders one still frame.
+  // three.js is fetched after first paint. With reduced motion nothing is loaded: the PNG poster is the picture.
   const sky = document.querySelector<HTMLElement>('[data-sky]');
-  if (sky) {
-    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const start = () => import('../scene/foxfire').then((m) => m.mount(sky, { still })).catch(() => sky.classList.add('is-still'));
+  if (sky && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const start = () => import('../scene/foxfire').then((m) => m.mount(sky)).catch(() => sky.classList.add('is-still'));
     (window as any).requestIdleCallback ? (window as any).requestIdleCallback(start, { timeout: 1200 }) : setTimeout(start, 400);
   }
 </script>

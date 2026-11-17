@@ -6,7 +6,7 @@ repo: camera-calibration-report
 metrics:
   - { label: "Pinhole, held-out RMS", value: "0.442 px mean over 20 splits" }
   - { label: "Fisheye, held-out RMS", value: "0.274 px mean over 20 splits" }
-  - { label: "Stereo epipolar error, held-out", value: "0.135 px" }
+  - { label: "Stereo epipolar mean |dy|, held-out", value: "0.135 px" }
 demo: { kind: undistort, props: { src: "/projects/camera-calibration-report/calib.json" } }
 star: { planet: sun }
 year: 2026
