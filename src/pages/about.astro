@@ -36,31 +36,39 @@ const ticks = Array.from({ length: 72 }, (_, i) => {
 }).join('');
 const proj = (id: string) => projects.find((p) => p.id === id)!;
 const pl = (...ids: string[]) => ids.map((id) => ({ t: proj(id).data.title, h: `/projects/${id}/` }));
-const planets = [
-  { id: 'sun', name: 'Sun in Capricorn', text: 'The durable builder: I finish things and measure them until the number holds.', links: pl('yolo-tensorrt-edge', 'object-tracking-bench') },
-  { id: 'asc', name: 'Rising sign Taurus', text: 'The practical one: hardware has to work on the bench, not only on a slide.', links: pl('pcb-esp32s3-epaper', 'pcb-lowpower-timer') },
-  { id: 'moon', name: 'Moon in Aries', text: 'Quick to start: a prototype first, the plan after.', links: pl('marker-alignment-demo', 'isaac-synthetic-yolo') },
-  { id: 'tech', name: 'Uranus and Neptune in Aquarius, near the midheaven', text: 'Technology and the new: edge AI and robot policies.', links: pl('libero-vla-repro', 'diffusion-policy-pusht') },
+const placements = [
+  { n: 'Sun', sign: 'Capricorn', t: 'Tradition reads a durable builder, someone who finishes and keeps measuring until the number holds.', l: pl('yolo-tensorrt-edge') },
+  { n: 'Moon', sign: 'Aries', t: 'Tradition reads quick starts: a prototype first, the plan after.', l: pl('marker-alignment-demo') },
+  { n: 'Mercury', sign: 'Capricorn', t: 'Tradition reads a structured mind that thinks in checklists and written rules.', l: pl('kicad-review-bench') },
+  { n: 'Venus', sign: 'Sagittarius', t: 'Tradition reads a taste for the far and the well made, here as a quiet audio board.', l: pl('pcb-sample-preamp') },
+  { n: 'Mars', sign: 'Pisces', t: 'Tradition reads effort that goes around obstacles instead of through them, learned by trial.', l: pl('ppo-mujoco-control') },
+  { n: 'Jupiter', sign: 'Cancer', t: 'Tradition reads growth through care for what lasts; here a battery asked to last for years.', l: pl('pcb-lowpower-timer') },
+  { n: 'Saturn', sign: 'Gemini', t: 'Tradition reads discipline about reporting and learning: say what you measured, and on what.', l: pl('camera-calibration-report') },
+  { n: 'Uranus', sign: 'Aquarius', t: 'Tradition reads the new and the technical, a long way from the usual path.', l: pl('libero-vla-repro') },
+  { n: 'Neptune', sign: 'Aquarius', t: 'Tradition reads ideals and unclear edges; hardware files are full of both.', l: pl('pcb-review-crossformat') },
+  { n: 'Pluto', sign: 'Sagittarius', t: 'Tradition reads slow, deep change; a long pipeline that is rebuilt until it runs.', l: pl('multistream-trt-pipeline') },
+  { n: 'Rising sign', sign: 'Taurus', t: 'Tradition reads the practical one: hardware has to work on the bench, not only on a slide.', l: pl('pcb-esp32s3-epaper') },
 ];
 const palaces = [
-  { n: 'Mệnh', e: 'Life', stars: 'Thiên Cơ', t: 'The planner star: tactics, engineering, a slow start. Tradition reads a careful mind.', l: pl('ros2-trt-detector') },
-  { n: 'Huynh đệ', e: 'Siblings', stars: '', t: '', l: [] },
-  { n: 'Phu thê', e: 'Partner', stars: '', t: '', l: [] },
-  { n: 'Tử tức', e: 'Children', stars: '', t: '', l: [] },
+  { n: 'Mệnh', e: 'Life', stars: 'Thiên Cơ', t: 'The planner star: tactics, engineering, a slow start. Tradition reads a careful mind that matures late.', l: pl('ros2-trt-detector') },
+  { n: 'Huynh đệ', e: 'Siblings', stars: '', t: 'The palace of siblings and close peers. No main star is read here.', l: [] },
+  { n: 'Phu thê', e: 'Partner', stars: 'Nhật Lương (bright), Hoá Quyền, Văn Xương Hoá Kỵ', t: 'Standing and authority rise, while paperwork and contracts are read as easy to get wrong.', l: pl('pcb-review-crossformat') },
+  { n: 'Tử tức', e: 'Children', stars: 'Vũ Khúc, Thiên Tướng', t: 'Stars of the doer who earns by executing. Read for what one makes and ships.', l: pl('vla-lora-finetune') },
   { n: 'Tài bạch', e: 'Wealth', stars: 'Đồng Cự, Hoá Lộc', t: 'Gain through talk and steady work; the Lộc mark is read as reward for effort.', l: pl('kicad-review-bench') },
-  { n: 'Tật ách', e: 'Health', stars: '', t: '', l: [] },
-  { n: 'Thiên di', e: 'Travel', stars: 'Thái Âm, Văn Khúc Hoá Khoa, Thiên Mã', t: 'Away from home: study, movement and a name that carries.', l: pl('llm-continual-books') },
-  { n: 'Nô bộc', e: 'Colleagues', stars: '', t: '', l: [] },
-  { n: 'Quan lộc', e: 'Career', stars: 'Lộc tồn, borrowing Nhật Lương', t: 'Career as a store of steady value: build things that last.', l: pl('multistream-trt-pipeline') },
-  { n: 'Điền trạch', e: 'Home', stars: '', t: '', l: [] },
-  { n: 'Phúc đức', e: 'Inner life', stars: 'The body palace sits here', t: 'The inner life is disciplined and under some pressure; it shows as self-set rules.', l: pl('ppo-mujoco-control') },
-  { n: 'Phụ mẫu', e: 'Parents', stars: '', t: '', l: [] },
+  { n: 'Tật ách', e: 'Health', stars: '', t: 'The palace of health and body. No main star is read here.', l: [] },
+  { n: 'Thiên di', e: 'Travel', stars: 'Thái Âm, Văn Khúc Hoá Khoa, Thiên Mã', t: 'Away from home: study, movement and a name that carries. Opportunity is read as coming from outside.', l: pl('llm-continual-books') },
+  { n: 'Nô bộc', e: 'Colleagues', stars: 'Liêm Trinh, Thiên Phủ', t: 'Strong colleagues and juniors, with some friction. Tradition reads good help that needs handling.', l: [] },
+  { n: 'Quan lộc', e: 'Career', stars: 'Empty palace, borrows Nhật Lương from the opposite; Lộc tồn', t: 'Career as a store of steady value: build things that last. The borrowed star is the one in Partner.', l: pl('multistream-trt-pipeline') },
+  { n: 'Điền trạch', e: 'Home', stars: 'Phá Quân', t: 'Fixed assets are read as changing hands; things are rebuilt rather than inherited. A floor plan redrawn from a scan fits.', l: pl('cad-sample-tests') },
+  { n: 'Phúc đức', e: 'Fortune & Virtue', stars: 'Empty palace, borrows Đồng Cự from the opposite (body palace)', t: 'The inner life is disciplined and under some pressure; it shows as self-set rules. The body palace sits here.', l: pl('ppo-mujoco-control') },
+  { n: 'Phụ mẫu', e: 'Parents', stars: '', t: 'The palace of parents and teachers. No main star is read here.', l: [] },
 ];
 const numbers = [
-  { v: 3, name: 'Life path', how: 'The digits of a date, added down to one figure.' },
-  { v: 9, name: 'Expression', how: 'The letters of a name, added down to one figure. Nine, like the nine tails.' },
-  { v: 4, name: 'Soul', how: 'The vowels of a name, added down.' },
-  { v: 5, name: 'Personality', how: 'The consonants of a name, added down.' },
+  { v: 3, name: 'Life path', how: 'Tradition reads creation and expression, with a risk of scattering. On the site: three facts in the hero, and the 3 in the footer mark.' },
+  { v: 9, name: 'Expression', how: 'Ha Phan Thanh Hai: 40 + 4 + 7 + 10 + 2 + 9 = 72, then 7 + 2. Tradition reads the closing of a cycle. On the site: the nine tails of the fox.' },
+  { v: 4, name: 'Soul urge', how: 'The vowels of the name: 4 + 9 = 13, then 1 + 3. Tradition reads structure and a steady base. On the site: the raw numbers left in every project.' },
+  { v: 5, name: 'Personality', how: 'The consonants: 40 + 7 + 10 + 2 = 59, then 5 + 9 = 14, then 1 + 4. Tradition reads change and range. On the site: five KiCad boards in the hero.' },
+  { v: 1, name: 'Personal year 2026', how: 'Tradition reads a year of beginnings, the first of a nine-year cycle. This site went live in 2026.' },
 ];
 ---
 <Base title="About: Hai Ha, vision and AI engineer" description="Hai Ha works on perception for UAVs and on getting vision models to run correctly and fast on real hardware. Notes on the work, and a 12-sign dial of the projects." current="about">
@@ -80,7 +88,7 @@ const numbers = [
         </div>
         <div class="lenses">
           <h2 class="lenses__title">Three lenses</h2>
-          <p class="fine">Symbols for fun, not science. Each lens is a way to read the projects, nothing more.</p>
+          <p class="fine">Symbols for fun, not science. Each lens is a way to read the projects, nothing more. Tradition says what it says; the projects are real either way.</p>
           <div class="seg" role="tablist" aria-label="Three lenses">
             <button class="seg__b" role="tab" id="lens-t1" aria-controls="lens-p1" aria-selected="true" type="button">Astrology</button>
             <button class="seg__b" role="tab" id="lens-t2" aria-controls="lens-p2" aria-selected="false" tabindex="-1" type="button">Tử vi</button>
@@ -105,34 +113,30 @@ const numbers = [
           </svg>
           <p class="dial__read" id="dial-read" aria-live="polite"><b>Pick a sign.</b> The dial places the nine tails of the hero constellation by their positions in a birth chart.</p>
         </div>
-        <ul class="planets" aria-label="What the main placements say">
-          {planets.map((x) => (
-            <li><button class="planet" type="button" aria-expanded="false" data-text={x.text} data-name={x.name} data-links={JSON.stringify(x.links)}>{x.name}</button></li>
+        <ul class="reads" aria-label="Placements and what tradition reads in them">
+          {placements.map((x) => (
+            <li class="read"><b class="read__n">{x.n}<span> in {x.sign}</span></b><span class="read__t">{x.t}</span>{x.l.map((k) => <a class="link read__l" href={k.h}>{k.t}</a>)}</li>
           ))}
         </ul>
-        <div class="planet__read" id="planet-read" aria-live="polite"></div>
           </div>
           <div class="lens" role="tabpanel" id="lens-p2" aria-labelledby="lens-t2" hidden>
-            <p class="fine">Twelve palaces of a Tử vi chart. Only the main stars are shown. Hover, focus or tap a palace to turn it.</p>
-            <ul class="palaces">
-              {palaces.map((x) => (
-                <li class={`palace${x.stars ? ' palace--on' : ''}`}>
-                  <button class="palace__b" type="button" aria-pressed="false" disabled={!x.stars} aria-label={`${x.n}, ${x.e}${x.stars ? `: ${x.stars}` : ''}`}>
-                    <span class="palace__front"><b>{x.n}</b><i>{x.e}</i></span>
-                    <span class="palace__back"><em>{x.stars}</em><span>{x.t}</span></span>
-                  </button>
-                  {x.l.length > 0 && <span class="palace__links">{x.l.map((k) => <a class="link" href={k.h}>{k.t}</a>)}</span>}
+            <p class="fine">Twelve palaces of a Tử vi chart, main stars only. Pick a palace, or move between them with the arrow keys. The body palace sits in Fortune &amp; Virtue.</p>
+            <ul class="palaces" role="group" aria-label="Twelve palaces">
+              {palaces.map((x, i) => (
+                <li class="palace">
+                  <button class="palace__b" type="button" aria-pressed={i === 0 ? 'true' : 'false'} aria-controls="palace-read" data-n={x.n} data-e={x.e} data-stars={x.stars} data-text={x.t} data-links={JSON.stringify(x.l)}><b>{x.n}</b><i>{x.e}</i></button>
                 </li>
               ))}
             </ul>
+            <div class="palace__read" id="palace-read" aria-live="polite"></div>
           </div>
           <div class="lens" role="tabpanel" id="lens-p3" aria-labelledby="lens-t3" hidden>
             <ul class="nums">
               {numbers.map((n) => (
-                <li class="num"><b class="num__v" data-to={n.v} aria-label={String(n.v)}>0</b><span class="num__n">{n.name}</span><span class="num__h">{n.how}</span></li>
+                <li class="num"><b class="num__v" data-to={n.v} aria-label={String(n.v)}>{n.v}</b><span class="num__n">{n.name}</span><span class="num__h">{n.how}</span></li>
               ))}
             </ul>
-            <p class="fine">3 · 9 · 4 · 5. The nine is the nine tails of the hero.</p>
+            <p class="fine">The sums use the Pythagorean letter table. The birth date behind the life path stays private.</p>
           </div>
         </div>
       </div>
@@ -163,21 +167,35 @@ const numbers = [
 
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // placements: pressing one writes its reading and its projects
-  const pread = document.getElementById('planet-read')!;
-  const planets = document.querySelectorAll<HTMLButtonElement>('.planet');
-  planets.forEach((b) => b.addEventListener('click', () => {
-    planets.forEach((x) => x.setAttribute('aria-expanded', String(x === b)));
-    pread.replaceChildren();
-    const strong = document.createElement('b'); strong.textContent = `${b.dataset.name}. `;
-    pread.append(strong, b.dataset.text ?? '');
-    const ul = document.createElement('ul'); ul.className = 'dial__list';
-    (JSON.parse(b.dataset.links || '[]') as { t: string; h: string }[]).forEach((l) => { const li = document.createElement('li'); const a = document.createElement('a'); a.className = 'link'; a.href = l.h; a.textContent = l.t; li.append(a); ul.append(li); });
-    pread.append(ul);
-  }));
-
-  // Tử vi palaces turn on hover, focus or press
-  document.querySelectorAll<HTMLButtonElement>('.palace__b').forEach((b) => b.addEventListener('click', () => b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true'))));
+  // Tử vi palaces: the pressed one writes its stars, reading and projects; arrows move through the grid
+  const palRead = document.getElementById('palace-read')!;
+  const pals = [...document.querySelectorAll<HTMLButtonElement>('.palace__b')];
+  const palShow = (b: HTMLButtonElement) => {
+    pals.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    palRead.replaceChildren();
+    const h = document.createElement('b'); h.textContent = `${b.dataset.n}, ${b.dataset.e}. `;
+    palRead.append(h);
+    if (b.dataset.stars) { const em = document.createElement('em'); em.textContent = `${b.dataset.stars}. `; palRead.append(em); }
+    palRead.append(b.dataset.text ?? '');
+    const links = JSON.parse(b.dataset.links || '[]') as { t: string; h: string }[];
+    if (links.length) {
+      const ul = document.createElement('ul'); ul.className = 'dial__list';
+      links.forEach((l) => { const li = document.createElement('li'); const a = document.createElement('a'); a.className = 'link'; a.href = l.h; a.textContent = l.t; li.append(a); ul.append(li); });
+      palRead.append(ul);
+    }
+    palRead.classList.remove('is-in'); void palRead.offsetWidth; palRead.classList.add('is-in');
+  };
+  palShow(pals[0]);
+  const cols = () => (innerWidth < 480 ? 3 : 4);
+  pals.forEach((b, i) => {
+    b.addEventListener('click', () => palShow(b));
+    b.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') palShow(b); });
+    b.addEventListener('keydown', (e) => {
+      const j = e.key === 'ArrowRight' ? i + 1 : e.key === 'ArrowLeft' ? i - 1 : e.key === 'ArrowDown' ? i + cols() : e.key === 'ArrowUp' ? i - cols() : -1;
+      if (j < 0 || j >= pals.length) return;
+      e.preventDefault(); pals[j].focus(); palShow(pals[j]);
+    });
+  });
 
   // the numbers count up when their panel opens
   const count = () => document.querySelectorAll<HTMLElement>('.num__v').forEach((el) => {

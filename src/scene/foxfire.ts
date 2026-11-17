@@ -1,7 +1,7 @@
 // The hero scene: a fox in profile with nine tails of foxfire over a turning brass dial of 12 signs; projects are flames
 // along the tails. Everything glows through one bloom pass. Loaded on demand (three.js is a separate chunk).
 // Pointer pulls the embers in, tails lick with mouse speed, hover flares a flame and shows its trade, dragging turns the
-// constellation, a click flies the camera to the flame before the project page opens. `still` renders one frame only.
+// constellation, a click flies the camera to the flame before the project page opens.
 import {
   WebGLRenderer, Scene, PerspectiveCamera, Group, BufferGeometry, BufferAttribute, LineBasicMaterial, Line, AnimationMixer, SkinnedMesh,
   Quaternion, type Bone,
@@ -114,7 +114,7 @@ function mat(vs: string, color: Color, extra: Uni = {}) {
 const attr = (g: BufferGeometry, name: string, arr: Float32Array, n = 1) => { const a = new BufferAttribute(arr, n); g.setAttribute(name, a); return a; };
 const rnd = (i: number, n: number) => { const x = Math.sin(i * 12.9898 + n * 78.233) * 43758.5453; return x - Math.floor(x); };
 
-export function mount(host: HTMLElement, opts: { still?: boolean } = {}) {
+export function mount(host: HTMLElement) {
   const orbIn: OrbIn[] = JSON.parse(host.dataset.orbs || '[]');
   const orbs: Orb[] = layoutOrbs(orbIn);
   const lis = new Map<string, HTMLElement>();
@@ -181,8 +181,7 @@ export function mount(host: HTMLElement, opts: { still?: boolean } = {}) {
     const act = mixer.clipAction(g.animations.find((c) => c.name === 'Survey') ?? g.animations[0]); act.timeScale = 0.55; act.play();
     mixer.update(1.0);
     headBase.copy(head.quaternion);
-    headAnimated = !opts.still && act.getClip().tracks.some((tr) => tr.name.startsWith('b_Head_05.quaternion'));
-    if (opts.still) draw(0);
+    headAnimated = act.getClip().tracks.some((tr) => tr.name.startsWith('b_Head_05.quaternion'));
   }, undefined, () => { /* no fox, the tails and dial still play */ });
   const headDir = new Vector3(Math.sin(FOX.yaw), 0, Math.cos(FOX.yaw)), UP = new Vector3(0, 1, 0), pitchAxis = new Vector3().crossVectors(headDir, UP).normalize();
   const baseNow: V3 = [...BASE], pq = new Quaternion(), qw = new Quaternion(), qy = new Quaternion(), qp = new Quaternion();
@@ -246,7 +245,7 @@ export function mount(host: HTMLElement, opts: { still?: boolean } = {}) {
 
   // --- state
   const st = {
-    t: 0, intro: opts.still ? 1 : 0, paused: false, visible: true, w: 1, h: 1, aspect: 2,
+    t: 0, intro: 0, paused: false, visible: true, w: 1, h: 1, aspect: 2,
     yaw: 0, pitch: 0, yawV: 0, pitchV: 0, dragging: false, lastX: 0, lastY: 0,
     px: 0, py: 0, ppx: 0, ppy: 0, inside: false, gather: 0, pointerLocal: new Vector3(),
     sway: TAILS.map(() => 0), swayV: TAILS.map(() => 0),
@@ -269,7 +268,6 @@ export function mount(host: HTMLElement, opts: { still?: boolean } = {}) {
     eMat.uniforms.uSpan.value = [visH * st.aspect * 1.2, visH * 1.25];
     const K = st.h / (2 * th);
     for (const m of matList) { m.uniforms.uK.value = K; m.uniforms.uPx.value = dpr; }
-    if (opts.still) draw(0);
   }
 
   // --- pointer: the whole hero listens, the canvas takes the drag
@@ -300,7 +298,7 @@ export function mount(host: HTMLElement, opts: { still?: boolean } = {}) {
     const on = () => { st.hover = i; }, off = () => { if (st.hover === i) st.hover = -1; };
     a.addEventListener('pointerenter', on); a.addEventListener('pointerleave', off); a.addEventListener('focus', on); a.addEventListener('blur', off);
     a.addEventListener('click', (e) => {
-      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || opts.still) return;
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       e.preventDefault();
       root.updateMatrixWorld(); const w = orbPosNow[i].clone().applyMatrix4(root.matrixWorld);
       st.fly = { t0: performance.now(), from: camera.position.clone(), to: w };
@@ -310,7 +308,7 @@ export function mount(host: HTMLElement, opts: { still?: boolean } = {}) {
   window.addEventListener('pageshow', () => { st.fly = null; });
 
   const pauseBtn = host.querySelector<HTMLButtonElement>('.sky__pause');
-  if (pauseBtn && !opts.still) {
+  if (pauseBtn) {
     pauseBtn.hidden = false;
     pauseBtn.addEventListener('click', () => {
       st.paused = !st.paused; pauseBtn.setAttribute('aria-pressed', String(st.paused)); pauseBtn.textContent = st.paused ? 'Resume motion' : 'Pause motion';
@@ -334,7 +332,7 @@ export function mount(host: HTMLElement, opts: { still?: boolean } = {}) {
 
     // fox: animation, head turned towards the pointer within limits, tail stub shrunk so the foxfire tails grow from it
     if (mixer) {
-      if (!opts.still) mixer.update(dt);
+      mixer.update(dt);
       const hb = head!; root.updateMatrixWorld(true);
       if (headAnimated) headBase.copy(hb.quaternion); else hb.quaternion.copy(headBase);
       const hn = hb.getWorldPosition(new Vector3()).project(camera);
@@ -444,7 +442,6 @@ export function mount(host: HTMLElement, opts: { still?: boolean } = {}) {
   }
 
   const ro = new ResizeObserver(resize); ro.observe(host); resize();
-  if (opts.still) { st.t = 2.2; draw(0); host.classList.add('is-live'); return; }
 
   let last = performance.now(), first = true;
   function frame(now: number) {
