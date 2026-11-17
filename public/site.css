@@ -331,11 +331,13 @@ main > .tools > .wrap > .toolgrid.fill { flex: 1 0 auto; }
 @media (max-width: 639px) { .tools .ic-chip--lg > .ic { --ic-s: 18px; } .tools .ic-dark .ic-chip > img.ic { padding: 1px; } .toolgroup { padding: var(--s-3) 0; } .toolgrid { margin-top: var(--s-4); } }
 @media (max-width: 479px) {
   .tools .toolrow { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-2); }
-  .tools .toolrow .ic-chip { height: 36px; padding: 0 var(--s-2); }
-  .toolhead__visual { display: none; }
+  .tools .toolrow .ic-chip { height: auto; min-height: 40px; padding: 0 var(--s-2); }
+  main > .tools > .wrap { display: flex; flex-direction: column; }
+  main > .tools > .wrap > .toolgrid.fill { flex: 1 0 auto; grid-auto-rows: minmax(min-content, 1fr); }
   .toolgrid { margin-top: var(--s-3); }
   .toolgroup { padding: var(--s-2) 0; }
   .toolgroup__body { gap: var(--s-2); }
+}
 
 /* ---- view transitions between pages: the project title morphs from the clicked flame or card (names are set in Base.astro) */
 @media (prefers-reduced-motion: no-preference) {
