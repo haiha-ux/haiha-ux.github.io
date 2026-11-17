@@ -7,6 +7,7 @@ metrics:
   - { label: "Hopper-v5", value: "3395 vs 2933 for SB3" }
   - { label: "Walker2d-v5", value: "3827 vs 3231 for SB3" }
   - { label: "Hopper without observation normalisation", value: "2602" }
+demo: { kind: chart, props: { variant: ppo, src: "/projects/ppo-mujoco-control/curves.json", env: "Hopper-v5" } }
 star: { planet: jupiter }
 year: 2026
 featured: false

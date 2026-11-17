@@ -186,3 +186,7 @@ html:not(.js-trace) .trace path { stroke-dashoffset: 0; } html:not(.js-trace) .t
 /* the two overlay lists must not swallow the pointer; only the star links take it */
 .sky__stars, .sky__labels { pointer-events: none; }
 .sky__star { pointer-events: auto; }
+
+/* in-page demos size themselves; only iframe demos use the fixed 16:10 frame */
+.demo__frame--live { aspect-ratio: auto; display: block; overflow: visible; border: 0; background: none; border-radius: 0; min-height: 120px; }
+.demo__frame--live .dm { width: 100%; }

@@ -7,6 +7,7 @@ metrics:
   - { label: "SmolVLA 0.6B", value: "66/100, 95% CI 56.3 to 74.5" }
   - { label: "SmolVLA 0.45B", value: "63/100" }
   - { label: "pi0-FAST", value: "79/100" }
+demo: { kind: wilson, props: { src: "/projects/libero-vla-repro/runs.json", a: "smolvla_libero_spatial", b: "pi0fast_libero_spatial" } }
 star: { planet: jupiter }
 year: 2026
 featured: true

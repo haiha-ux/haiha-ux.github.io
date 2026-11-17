@@ -7,6 +7,7 @@ metrics:
   - { label: "Off current", value: "about 0.5 uA typical" }
   - { label: "Off current, worst case", value: "about 2.8 uA" }
   - { label: "Board", value: "50 x 40 mm, 2 layers" }
+demo: { kind: pcb3d, props: { src: "/projects/pcb-lowpower-timer/board.glb", fallback: "/projects/pcb-lowpower-timer/fallback.png", title: "Low-power timer board" } }
 star: { planet: neptune }
 year: 2026
 featured: false

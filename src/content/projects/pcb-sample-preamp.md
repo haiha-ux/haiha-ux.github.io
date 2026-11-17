@@ -7,6 +7,7 @@ metrics:
   - { label: "Gain", value: "40.0 dB, G = 100.3" }
   - { label: "ERC", value: "0 errors, 0 warnings" }
   - { label: "DRC", value: "0 errors, 4 waived silkscreen warnings" }
+demo: { kind: pcb3d, props: { src: "/projects/pcb-sample-preamp/board.glb", fallback: "/projects/pcb-sample-preamp/fallback.png", title: "Sample preamp board" } }
 star: { planet: neptune }
 year: 2026
 featured: false

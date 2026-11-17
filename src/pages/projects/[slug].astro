@@ -29,9 +29,9 @@ const repoUrl = `https://github.com/haiha-ux/${d.repo}`;
         </dl>
       )}
       {d.demo && (
-        <section class="demo" id="demo" aria-labelledby="demo-h" data-demo-kind={d.demo.kind} data-demo-src={d.demo.src} data-demo-title={d.title}>
+        <section class="demo" id="demo" aria-labelledby="demo-h" data-demo-kind={d.demo.kind} data-demo-props={JSON.stringify({ src: d.demo.src, title: d.title, ...d.demo.props })}>
           <h2 class="group-title" id="demo-h">Run it in your browser</h2>
-          <div class="demo__frame" data-demo-host>
+          <div class={`demo__frame${d.demo.kind === 'iframe' ? '' : ' demo__frame--live'}`} data-demo-host>
             {cover && <img src={cover} alt="" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35">}
             <button class="btn btn--primary" type="button" data-demo-run style="position:relative">Run it</button>
           </div>
@@ -51,20 +51,31 @@ const repoUrl = `https://github.com/haiha-ux/${d.repo}`;
   </main>
 </Base>
 <script>
-  import { demos } from '../../demos/registry';
+  // iframe demos wait for the button; the in-page kinds (3D board, charts, slider) mount when the frame scrolls into view or the button is pressed
+  import { registry } from '../../demos/registry';
   const root = document.querySelector<HTMLElement>('[data-demo-kind]');
   const run = root?.querySelector<HTMLButtonElement>('[data-demo-run]');
-  run?.addEventListener('click', async () => {
-    const kind = root!.dataset.demoKind!;
-    const host = root!.querySelector<HTMLElement>('[data-demo-host]')!;
-    run.disabled = true;
-    run.textContent = 'Loading';
-    try {
-      const mod = await demos[kind]();
-      mod.default(host, { kind: kind as never, src: root!.dataset.demoSrc, title: root!.dataset.demoTitle });
-    } catch {
-      run.disabled = false;
-      run.textContent = 'Run it';
-    }
-  });
+  if (root && run) {
+    const host = root.querySelector<HTMLElement>('[data-demo-host]')!;
+    let started = false;
+    const start = async () => {
+      if (started) return;
+      started = true;
+      run.disabled = true;
+      run.textContent = 'Loading';
+      try {
+        const mod = await registry[root.dataset.demoKind!]();
+        host.replaceChildren();
+        await mod.mount(host, JSON.parse(root.dataset.demoProps || '{}'));
+      } catch (e) {
+        started = false;
+        host.replaceChildren(run);
+        run.disabled = false;
+        run.textContent = 'Run it';
+        console.warn('demo failed', e);
+      }
+    };
+    run.addEventListener('click', start);
+    if (root.dataset.demoKind !== 'iframe') new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { o.disconnect(); void start(); } }, { rootMargin: '200px' }).observe(root);
+  }
 </script>

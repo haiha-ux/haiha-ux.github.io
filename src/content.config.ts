@@ -18,6 +18,7 @@ const projects = defineCollection({
         kind: z.enum(['iframe', 'pcb3d', 'kicanvas', 'chart', 'wilson', 'undistort']),
         src: z.string().optional(),
         title: z.string().optional(),
+        props: z.record(z.string(), z.unknown()).optional(),
       })
       .optional(),
     star: z.union([z.object({ planet: z.enum(PLANETS) }), z.object({ sign: z.enum(SIGNS) })]).optional(),
