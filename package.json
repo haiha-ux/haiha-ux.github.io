@@ -9,6 +9,7 @@
     "preview": "astro preview --port 4321 --host 127.0.0.1"
   },
   "dependencies": {
+    "@astrojs/sitemap": "^3.7.5",
     "astro": "^7.4.12",
     "three": "^0.187.0"
   },

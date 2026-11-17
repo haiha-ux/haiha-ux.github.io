@@ -13,9 +13,10 @@ const { p, prev, next } = Astro.props;
 const { Content } = await render(p);
 const d = p.data;
 const cover = fs.existsSync(`public/projects/${p.id}/cover.webp`) ? `/projects/${p.id}/cover.webp` : (typeof d.demo?.props?.fallback === 'string' ? d.demo.props.fallback : null);
+const ogImage = cover && /\.(webp|png|jpe?g)$/.test(cover) && cover.startsWith('/') ? cover : undefined;
 const repoUrl = `https://github.com/haiha-ux/${d.repo}`;
 ---
-<Base title={`${d.title}: Hai Ha`} description={d.summary.split('. ')[0] + '.'} current="projects">
+<Base title={`${d.title}: Hai Ha`} description={d.summary.split('. ')[0] + '.'} current="projects" image={ogImage}>
   <main id="top" class="page">
     <div class="wrap">
       <p class="crumbs"><a href="/projects/">Projects</a> / {DOMAINS[d.domain]}</p>

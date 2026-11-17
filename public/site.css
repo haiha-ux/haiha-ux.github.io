@@ -367,3 +367,5 @@ main > .tools > .wrap > .toolgrid.fill { flex: 1 0 auto; }
 
 /* phone: a card's title link is a full-height touch target, not a 23px line */
 @media (max-width: 639px) { #featured .card h3 a { display: inline-flex; align-items: center; min-height: 44px; } }
+
+.tools img.ic-sq { border-radius: 8px; }

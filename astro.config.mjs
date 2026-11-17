@@ -1,7 +1,9 @@
 import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://haiha-ux.github.io',
+  integrations: [sitemap({ filter: (u) => !u.endsWith('/404/') })],
   trailingSlash: 'always',
   build: { format: 'directory' },
   i18n: { locales: ['en', 'vi'], defaultLocale: 'en' },

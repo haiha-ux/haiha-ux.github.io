@@ -154,5 +154,29 @@
     "url": "https://github.com/simple-icons/simple-icons",
     "trademark": true,
     "colour": "one-colour fallback in the brand hex"
+  },
+  {
+    "file": "lerobot.webp",
+    "name": "LeRobot",
+    "kind": "colour",
+    "source": "project's own icon",
+    "url": "https://github.com/huggingface/lerobot",
+    "trademark": true
+  },
+  {
+    "file": "mujoco.webp",
+    "name": "MuJoCo",
+    "kind": "colour",
+    "source": "project's own icon",
+    "url": "https://github.com/google-deepmind/mujoco",
+    "trademark": true
+  },
+  {
+    "file": "isaac-sim.webp",
+    "name": "Isaac Sim",
+    "kind": "colour",
+    "source": "project's own icon",
+    "url": "https://github.com/isaac-sim/IsaacSim",
+    "trademark": true
   }
 ]

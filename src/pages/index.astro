@@ -28,18 +28,20 @@ const big = (m: { value: string; hero?: string }) => {
 const THUMBS = ['cover.webp', 'fallback.webp', 'left02.jpg', 'rollout.gif'];
 const thumbOf = (id: string) => { const f = THUMBS.find((n) => fs.existsSync(`public/projects/${id}/${n}`)); return f ? `/projects/${id}/${f}` : null; };
 const first = (p: (typeof projects)[number]) => p.data.metrics[0];
-type Tool = { name: string; img?: string; w?: number; h?: number; dark?: boolean };
-// logos only where an official mark exists in the kit's sources; the rest are plain text chips
+type Tool = { name: string; img?: string; ext?: string; w?: number; h?: number; dark?: boolean };
+// logos from the kit's sources, or the project's own icon where the kit has none (webp); Stable-Baselines3 has no official mark and stays a text chip
 const toolGroups: { name: string; items: Tool[] }[] = [
   { name: 'Edge AI and inference', items: [{ img: 'nvidia', w: 40, h: 12, name: 'TensorRT and CUDA' }, { img: 'onnx', w: 40, h: 40, name: 'ONNX Runtime' }, { img: 'qualcomm', w: 40, h: 7, name: 'Qualcomm QNN', dark: true }, { img: 'opencv', w: 32, h: 40, name: 'OpenCV' }, { img: 'gstreamer', w: 40, h: 12, name: 'GStreamer' }] },
-  { name: 'ML and robot learning', items: [{ img: 'pytorch', w: 33, h: 40, name: 'PyTorch' }, { img: 'scikitlearn', w: 40, h: 23, name: 'scikit-learn' }, { img: 'hugging-face-icon', w: 40, h: 37, name: 'Hugging Face' }, { name: 'LeRobot' }, { name: 'Stable-Baselines3 and Gymnasium' }, { name: 'MuJoCo' }, { name: 'Isaac Sim' }] },
+  { name: 'ML and robot learning', items: [{ img: 'pytorch', w: 33, h: 40, name: 'PyTorch' }, { img: 'scikitlearn', w: 40, h: 23, name: 'scikit-learn' }, { img: 'hugging-face-icon', w: 40, h: 37, name: 'Hugging Face' }, { img: 'lerobot', ext: 'webp', w: 40, h: 40, name: 'LeRobot' }, { name: 'Stable-Baselines3 and Gymnasium' }, { img: 'mujoco', ext: 'webp', w: 40, h: 40, name: 'MuJoCo' }, { img: 'isaac-sim', ext: 'webp', w: 40, h: 40, name: 'Isaac Sim' }] },
   { name: 'Hardware and CAD', items: [{ img: 'kicad', w: 40, h: 12, name: 'KiCad' }, { img: 'freecad', w: 34, h: 40, name: 'FreeCAD' }] },
   { name: 'Systems and data', items: [{ img: 'ros', w: 40, h: 11, name: 'ROS 2', dark: true }, { img: 'numpy', w: 37, h: 40, name: 'NumPy' }, { img: 'pandas-icon', w: 25, h: 40, name: 'pandas', dark: true }] },
 ];
+const person = { '@context': 'https://schema.org', '@type': 'Person', name: 'Hai Ha', url: 'https://haiha-ux.github.io/', jobTitle: 'Vision and AI engineer', image: 'https://haiha-ux.github.io/portrait.webp', sameAs: ['https://github.com/haiha-ux', UPWORK] };
 const demoCount = projects.filter((p) => p.data.demo).length;
 ---
 <Base title="Hai Ha: vision and AI engineer, projects with raw numbers" description={`Portfolio of Hai Ha, a vision and AI engineer in Ho Chi Minh City. ${count} public projects with raw numbers, from TensorRT benchmarks and AlphaZero self-play to Diffusion Policy and KiCad boards.`} home>
   <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(person)} />
     <script is:inline>document.documentElement.classList.add('m-enter');setTimeout(function(){document.documentElement.classList.add('m-enter-done')},700)</script>
     <script is:inline src={v("/assets/backgrounds/backgrounds.js")}></script>
     <link rel="stylesheet" href={v("/assets/diagrams/diagram.css")}>
@@ -121,7 +123,7 @@ const demoCount = projects.filter((p) => p.data.demo).length;
               <p class="toolgroup__n">{g.name}</p>
               <ul class="toolrow" style={`--n:${g.items.length}`}>
                 {g.items.map((t) => (
-                  <li class={t.dark ? 'ic-dark' : undefined}><span class="ic-chip ic-chip--lg">{t.img && <img class={`ic ic-40${(t.h ?? 40) < 16 ? ' ic-wide' : ''}`} src={`/assets/icons/${t.img}.svg`} alt="" width={t.w} height={t.h}>}<span class="ic-name" title={t.name}>{t.name}</span></span></li>
+                  <li class={t.dark ? 'ic-dark' : undefined}><span class="ic-chip ic-chip--lg">{t.img && <img class={`ic ic-40${(t.h ?? 40) < 16 ? ' ic-wide' : ''}${t.ext ? ' ic-sq' : ''}`} src={`/assets/icons/${t.img}.${t.ext ?? 'svg'}`} alt="" width={t.w} height={t.h}>}<span class="ic-name" title={t.name}>{t.name}</span></span></li>
                 ))}
               </ul>
               </div>
