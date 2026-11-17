@@ -49,4 +49,15 @@ node <skill>/scripts/gate.mjs dist/index.html --root dist
 
 ## Deploy
 
-Pushing to `main` runs `.github/workflows/deploy.yml` (Astro action, then GitHub Pages). The repo is not on GitHub yet.
+Pushing to `main` runs `.github/workflows/deploy.yml` (Astro action, then GitHub Pages) and the site goes live at https://haiha-ux.github.io/.
+
+## Folders
+
+- `src/pages/` has the routes: home, `about`, `quick` (the CV), `projects/` and the 404.
+- `src/content/projects/` holds one Markdown file per project; `src/layouts/Base.astro` holds the head tags, nav and footer.
+- `src/scene/` and `src/demos/` hold the three.js hero and the in-browser demos.
+- `public/` is copied as is: fonts, the fox model, the design kit in `assets/`, and `public/projects/<slug>/` for each project's files.
+
+## Sharing and search
+
+Every page gets its own title, description, canonical URL and Open Graph and Twitter tags from `Base.astro`. A project page uses its `cover.webp` (or `fallback.webp`) as the preview image, and falls back to `public/share.jpg` (1200 x 630) when there is none. The home page carries `Person` JSON-LD. `@astrojs/sitemap` writes `sitemap-index.xml` at build, and `public/robots.txt` points to it.
