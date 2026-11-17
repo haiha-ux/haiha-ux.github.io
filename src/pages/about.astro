@@ -34,6 +34,34 @@ const ticks = Array.from({ length: 72 }, (_, i) => {
   const [x0, y0] = pol(i * 5, i % 6 === 0 ? 222 : 226), [x1, y1] = pol(i * 5, 236);
   return `M${f(x0)} ${f(y0)}L${f(x1)} ${f(y1)}`;
 }).join('');
+const proj = (id: string) => projects.find((p) => p.id === id)!;
+const pl = (...ids: string[]) => ids.map((id) => ({ t: proj(id).data.title, h: `/projects/${id}/` }));
+const planets = [
+  { id: 'sun', name: 'Sun in Capricorn', text: 'The durable builder: I finish things and measure them until the number holds.', links: pl('yolo-tensorrt-edge', 'object-tracking-bench') },
+  { id: 'asc', name: 'Rising sign Taurus', text: 'The practical one: hardware has to work on the bench, not only on a slide.', links: pl('pcb-esp32s3-epaper', 'pcb-lowpower-timer') },
+  { id: 'moon', name: 'Moon in Aries', text: 'Quick to start: a prototype first, the plan after.', links: pl('marker-alignment-demo', 'isaac-synthetic-yolo') },
+  { id: 'tech', name: 'Uranus and Neptune in Aquarius, near the midheaven', text: 'Technology and the new: edge AI and robot policies.', links: pl('libero-vla-repro', 'diffusion-policy-pusht') },
+];
+const palaces = [
+  { n: 'Mệnh', e: 'Life', stars: 'Thiên Cơ', t: 'The planner star: tactics, engineering, a slow start. Tradition reads a careful mind.', l: pl('ros2-trt-detector') },
+  { n: 'Huynh đệ', e: 'Siblings', stars: '', t: '', l: [] },
+  { n: 'Phu thê', e: 'Partner', stars: '', t: '', l: [] },
+  { n: 'Tử tức', e: 'Children', stars: '', t: '', l: [] },
+  { n: 'Tài bạch', e: 'Wealth', stars: 'Đồng Cự, Hoá Lộc', t: 'Gain through talk and steady work; the Lộc mark is read as reward for effort.', l: pl('kicad-review-bench') },
+  { n: 'Tật ách', e: 'Health', stars: '', t: '', l: [] },
+  { n: 'Thiên di', e: 'Travel', stars: 'Thái Âm, Văn Khúc Hoá Khoa, Thiên Mã', t: 'Away from home: study, movement and a name that carries.', l: pl('llm-continual-books') },
+  { n: 'Nô bộc', e: 'Colleagues', stars: '', t: '', l: [] },
+  { n: 'Quan lộc', e: 'Career', stars: 'Lộc tồn, borrowing Nhật Lương', t: 'Career as a store of steady value: build things that last.', l: pl('multistream-trt-pipeline') },
+  { n: 'Điền trạch', e: 'Home', stars: '', t: '', l: [] },
+  { n: 'Phúc đức', e: 'Inner life', stars: 'The body palace sits here', t: 'The inner life is disciplined and under some pressure; it shows as self-set rules.', l: pl('ppo-mujoco-control') },
+  { n: 'Phụ mẫu', e: 'Parents', stars: '', t: '', l: [] },
+];
+const numbers = [
+  { v: 3, name: 'Life path', how: 'The digits of a date, added down to one figure.' },
+  { v: 9, name: 'Expression', how: 'The letters of a name, added down to one figure. Nine, like the nine tails.' },
+  { v: 4, name: 'Soul', how: 'The vowels of a name, added down.' },
+  { v: 5, name: 'Personality', how: 'The consonants of a name, added down.' },
+];
 ---
 <Base title="About: Hai Ha, vision and AI engineer" description="Hai Ha works on perception for UAVs and on getting vision models to run correctly and fast on real hardware. Notes on the work, and a 12-sign dial of the projects." current="about">
   <main id="top" class="page">
@@ -43,13 +71,22 @@ const ticks = Array.from({ length: 72 }, (_, i) => {
       </div>
       <div class="about">
         <div class="prose">
-          <div class="about-portrait"><img src="/portrait.webp" alt="Portrait of Hai Ha" width="256" height="256" loading="eager" fetchpriority="high"></div>
+          <figure class="about-photo"><img src="/portrait-lg-800.webp" srcset="/portrait-lg-480.webp 480w, /portrait-lg-800.webp 800w" sizes="(max-width: 899px) 100vw, 520px" alt="Hai standing in a pine forest, looking down, in a dark jacket" width="800" height="942" loading="eager" fetchpriority="high"></figure>
           <p>I am Hai, an engineer in Ho Chi Minh City. At my day job I work on perception for UAVs: multi-camera fisheye calibration, depth for obstacle avoidance and quantized models on Qualcomm NPUs. I am also doing an M.Eng. in electronics at Ho Chi Minh City University of Technology. Friends call me Cáo, the fox.</p>
           <p>The repos on this site are things I built to measure something properly. Each one has the raw numbers, the commands to reproduce them and a section on what did not work. Several of those sections report a null result, and I left them in.</p>
           <p>In 2026 I was the AI engineer on a city-scale drone pilot for traffic and urban-order monitoring in Hanoi, covered by <a class="link" href="https://news.laodong.vn/xa-hoi/tuan-tra-bang-uav-buoc-tien-huong-toi-do-thi-an-toan-hien-dai-1742963.ldo">Lao Động</a> and <a class="link" href="https://anninhthudo.vn/cong-an-ha-noi-tuan-tra-bang-uav-make-in-viet-nam-dot-pha-quan-tri-giao-thong-va-trat-tu-do-thi-post660666.antd">An ninh Thủ đô</a>. I also co-authored MARS, a small multi-task Mamba model for mapless UAV navigation (IAAA 2026, Springer LNNS).</p>
           <p>Day to day I use Python and C++, PyTorch, TensorRT, ONNX Runtime, OpenCV, CUDA, GStreamer, ROS 2 and KiCad.</p>
           <p class="cv-links"><a class="btn btn--primary" href="https://www.upwork.com/freelancers/~0101fb6cf6eb992555">Hire me on Upwork</a><a class="btn btn--secondary" href="/quick/">Read the quick CV</a></p>
         </div>
+        <div class="lenses">
+          <h2 class="lenses__title">Three lenses</h2>
+          <p class="fine">Symbols for fun, not science. Each lens is a way to read the projects, nothing more.</p>
+          <div class="seg" role="tablist" aria-label="Three lenses">
+            <button class="seg__b" role="tab" id="lens-t1" aria-controls="lens-p1" aria-selected="true" type="button">Astrology</button>
+            <button class="seg__b" role="tab" id="lens-t2" aria-controls="lens-p2" aria-selected="false" tabindex="-1" type="button">Tử vi</button>
+            <button class="seg__b" role="tab" id="lens-t3" aria-controls="lens-p3" aria-selected="false" tabindex="-1" type="button">Numbers</button>
+          </div>
+          <div class="lens" role="tabpanel" id="lens-p1" aria-labelledby="lens-t1">
         <div class="dial">
           <svg viewBox="0 0 500 500" role="group" aria-label="A dial with 12 signs; each shows the projects on its tails">
             <g class="dial__ring" aria-hidden="true">
@@ -66,7 +103,37 @@ const ticks = Array.from({ length: 72 }, (_, i) => {
             ))}
             {dots.map((d) => <circle cx={f(d.xy[0])} cy={f(d.xy[1])} r={d.main ? 6 : 3.5} fill={d.main ? 'var(--accent)' : 'var(--steel)'} />)}
           </svg>
-          <p class="dial__read" id="dial-read" aria-live="polite"><b>Pick a sign.</b> The dial places the nine tails of the hero constellation by their positions in a birth chart. Symbols for fun, not science.</p>
+          <p class="dial__read" id="dial-read" aria-live="polite"><b>Pick a sign.</b> The dial places the nine tails of the hero constellation by their positions in a birth chart.</p>
+        </div>
+        <ul class="planets" aria-label="What the main placements say">
+          {planets.map((x) => (
+            <li><button class="planet" type="button" aria-expanded="false" data-text={x.text} data-name={x.name} data-links={JSON.stringify(x.links)}>{x.name}</button></li>
+          ))}
+        </ul>
+        <div class="planet__read" id="planet-read" aria-live="polite"></div>
+          </div>
+          <div class="lens" role="tabpanel" id="lens-p2" aria-labelledby="lens-t2" hidden>
+            <p class="fine">Twelve palaces of a Tử vi chart. Only the main stars are shown. Hover, focus or tap a palace to turn it.</p>
+            <ul class="palaces">
+              {palaces.map((x) => (
+                <li class={`palace${x.stars ? ' palace--on' : ''}`}>
+                  <button class="palace__b" type="button" aria-pressed="false" disabled={!x.stars} aria-label={`${x.n}, ${x.e}${x.stars ? `: ${x.stars}` : ''}`}>
+                    <span class="palace__front"><b>{x.n}</b><i>{x.e}</i></span>
+                    <span class="palace__back"><em>{x.stars}</em><span>{x.t}</span></span>
+                  </button>
+                  {x.l.length > 0 && <span class="palace__links">{x.l.map((k) => <a class="link" href={k.h}>{k.t}</a>)}</span>}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div class="lens" role="tabpanel" id="lens-p3" aria-labelledby="lens-t3" hidden>
+            <ul class="nums">
+              {numbers.map((n) => (
+                <li class="num"><b class="num__v" data-to={n.v} aria-label={String(n.v)}>0</b><span class="num__n">{n.name}</span><span class="num__h">{n.how}</span></li>
+              ))}
+            </ul>
+            <p class="fine">3 · 9 · 4 · 5. The nine is the nine tails of the hero.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -93,4 +160,51 @@ const ticks = Array.from({ length: 72 }, (_, i) => {
   cells.forEach((a) => { a.addEventListener('pointerenter', () => show(a)); a.addEventListener('focus', () => show(a)); });
   const ring = document.querySelector('.dial__ring');
   ring?.addEventListener('pointerenter', () => ring.classList.add('is-paused'));
+
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // placements: pressing one writes its reading and its projects
+  const pread = document.getElementById('planet-read')!;
+  const planets = document.querySelectorAll<HTMLButtonElement>('.planet');
+  planets.forEach((b) => b.addEventListener('click', () => {
+    planets.forEach((x) => x.setAttribute('aria-expanded', String(x === b)));
+    pread.replaceChildren();
+    const strong = document.createElement('b'); strong.textContent = `${b.dataset.name}. `;
+    pread.append(strong, b.dataset.text ?? '');
+    const ul = document.createElement('ul'); ul.className = 'dial__list';
+    (JSON.parse(b.dataset.links || '[]') as { t: string; h: string }[]).forEach((l) => { const li = document.createElement('li'); const a = document.createElement('a'); a.className = 'link'; a.href = l.h; a.textContent = l.t; li.append(a); ul.append(li); });
+    pread.append(ul);
+  }));
+
+  // Tử vi palaces turn on hover, focus or press
+  document.querySelectorAll<HTMLButtonElement>('.palace__b').forEach((b) => b.addEventListener('click', () => b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true'))));
+
+  // the numbers count up when their panel opens
+  const count = () => document.querySelectorAll<HTMLElement>('.num__v').forEach((el) => {
+    const to = Number(el.dataset.to);
+    if (reduce) { el.textContent = String(to); return; }
+    const t0 = performance.now();
+    const step = (now: number) => { const k = Math.min(1, (now - t0) / 900); el.textContent = String(Math.round(to * (1 - Math.pow(1 - k, 3)))); if (k < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  });
+
+  // lens tabs: arrow keys, Home and End move between them
+  const tabs = [...document.querySelectorAll<HTMLButtonElement>('.seg__b')];
+  const pick = (t: HTMLButtonElement) => {
+    tabs.forEach((x) => {
+      const on = x === t;
+      x.setAttribute('aria-selected', String(on)); x.tabIndex = on ? 0 : -1;
+      const panel = document.getElementById(x.getAttribute('aria-controls')!)!;
+      panel.hidden = !on;
+    });
+    if (t.id === 'lens-t3') count();
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => pick(t));
+    t.addEventListener('keydown', (e) => {
+      const j = e.key === 'ArrowRight' ? (i + 1) % 3 : e.key === 'ArrowLeft' ? (i + 2) % 3 : e.key === 'Home' ? 0 : e.key === 'End' ? 2 : -1;
+      if (j < 0) return;
+      e.preventDefault(); tabs[j].focus(); pick(tabs[j]);
+    });
+  });
 </script>
