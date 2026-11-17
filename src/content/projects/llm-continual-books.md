@@ -4,7 +4,7 @@ summary: "Qwen2.5-7B-Instruct learns three obscure public-domain books in steps 
 domain: other
 repo: llm-continual-books
 metrics:
-  - { label: "Naive training", value: "book 1 falls from 40.7% to 6.0%" }
+  - { label: "Naive training", value: "book 1 falls from 40.7% to 6.0%", hero: "40.7% to 6.0%" }
   - { label: "Self-replay plus KL", value: "keeps 32 of 61 book-1 answers" }
   - { label: "Insulated expert, soft gate", value: "keeps 26 of 61" }
 demo: { kind: chart, props: { variant: continual, src: "/projects/llm-continual-books/forgetting.json" } }

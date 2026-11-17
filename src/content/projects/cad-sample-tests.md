@@ -4,7 +4,7 @@ summary: "An ISO mechanical part drawing, a 1:50 floor plan and a 1921 scanned d
 domain: cad
 repo: cad-sample-tests
 metrics:
-  - { label: "Drawings", value: "3, each as DXF, DWG and PDF" }
+  - { label: "Drawings", value: "3, each as DXF, DWG and PDF", hero: "3 drawings" }
   - { label: "ezdxf audit", value: "0 errors on both DXF files" }
   - { label: "Dimensions", value: "15 in the part drawing, 25 in the floor plan" }
 star: { planet: saturn }

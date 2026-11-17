@@ -4,7 +4,7 @@ summary: "A Decision Transformer in plain PyTorch against BC and %BC on five off
 domain: robot-learning
 repo: decision-transformer-offline
 metrics:
-  - { label: "Winner", value: "BC or %BC on all 5 datasets" }
+  - { label: "Winner", value: "BC or %BC on all 5 datasets", hero: "BC wins 5/5" }
   - { label: "hopper-medium score", value: "BC 103.7, %BC 104.5, DT 70.5" }
   - { label: "Runs", value: "45, 3 seeds each" }
 demo: { kind: iframe, src: "https://haiha-ux.github.io/decision-transformer-offline/" }

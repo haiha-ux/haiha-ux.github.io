@@ -12,7 +12,7 @@ const projects = defineCollection({
     summary: z.string(),
     domain: z.enum(['edge-ai', 'robot-learning', 'pcb', 'cad', 'other']),
     repo: z.string(),
-    metrics: z.array(z.object({ label: z.string(), value: z.string() })).default([]),
+    metrics: z.array(z.object({ label: z.string(), value: z.string(), hero: z.string().optional() })).default([]),
     demo: z
       .object({
         kind: z.enum(['iframe', 'pcb3d', 'kicanvas', 'chart', 'wilson', 'undistort']),

@@ -4,7 +4,7 @@ summary: "A ROS 2 Jazzy node runs a TensorRT FP16 YOLO11n detector on a camera t
 domain: edge-ai
 repo: ros2-trt-detector
 metrics:
-  - { label: "Rate held", value: "30 Hz at 640 and 1280 input" }
+  - { label: "Rate held", value: "30 Hz at 640 and 1280 input", hero: "30 Hz" }
   - { label: "Image stamp to detections, 640", value: "14.1 ms median" }
   - { label: "Image stamp to detections, 1280", value: "19.4 ms median" }
 star: { planet: sun }

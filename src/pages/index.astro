@@ -28,7 +28,12 @@ const tabs: { id: string; label: string; domains: string[] }[] = [
 ];
 const chips = [{ id: 'all', label: 'All' }, ...tabs.map((t) => ({ id: t.id, label: t.label }))];
 const tabOf = (domain: string) => tabs.find((t) => t.domains.includes(domain))!.id;
-const big = (v: string) => (v.length <= 14 ? v : v.match(/\d[\d.,]*(?:\s?\/\s?\d+)?\s?(?:%|[A-Za-z]{1,3}\b)?/)?.[0] ?? v.slice(0, 14));
+// the short figure for a picture-less card: the metric's own `hero`, else its first number and one unit word, never a dangling comma or "of"
+const big = (m: { value: string; hero?: string }) => {
+  if (m.hero) return m.hero;
+  const x = m.value.match(/^(\d[\d.]*%?)(?:\s+(?!and\b|of\b|vs\b|to\b)([A-Za-z]{2,}))?/);
+  return x ? [x[1], x[2]].filter(Boolean).join(' ') : m.value.split(/[,;]/)[0].slice(0, 16);
+};
 const THUMBS = ['cover.webp', 'fallback.png', 'left02.jpg', 'rollout.gif'];
 const thumbOf = (id: string) => { const f = THUMBS.find((n) => fs.existsSync(`public/projects/${id}/${n}`)); return f ? `/projects/${id}/${f}` : null; };
 const first = (p: (typeof projects)[number]) => p.data.metrics[0];
@@ -93,7 +98,7 @@ const demoCount = projects.filter((p) => p.data.demo).length;
             return (
               <li class="bcard" data-tab={tabOf(p.data.domain)}>
                 <a class="bcard__thumb" href={`/projects/${p.id}/`} tabindex="-1" aria-hidden="true">
-                  {th ? <img src={th} alt="" loading="lazy" width="320" height="200" /> : <span class="bcard__tile"><b>{big(first(p).value)}</b><i>{first(p).label}</i></span>}
+                  {th ? <img src={th} alt="" loading="lazy" width="320" height="200" /> : <span class="bcard__tile"><b>{big(first(p))}</b><i>{first(p).label}</i></span>}
                 </a>
                 <div class="bcard__body">
                   <h3><a href={`/projects/${p.id}/`}>{p.data.title}</a></h3>

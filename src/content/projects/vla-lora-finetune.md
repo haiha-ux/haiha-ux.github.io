@@ -4,7 +4,7 @@ summary: "A LoRA adapter fine-tuned on SmolVLA for one weak LIBERO-Spatial task.
 domain: robot-learning
 repo: vla-lora-finetune
 metrics:
-  - { label: "Target task 5", value: "44.4% pretrained, 43.3% and 47.8% with LoRA" }
+  - { label: "Target task 5", value: "44.4% pretrained, 43.3% and 47.8% with LoRA", hero: "47.8% LoRA" }
   - { label: "Task 7, forgetting check", value: "7/10 pretrained, 1/10 and 0/10 after LoRA" }
   - { label: "Trainable parameters", value: "3,276,800, 0.54%" }
 demo: { kind: iframe, src: "https://haiha-ux.github.io/vla-lora-finetune/" }

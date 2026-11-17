@@ -4,7 +4,7 @@ summary: "Two public boards, one Altium and one Eagle, imported into KiCad 10 an
 domain: pcb
 repo: pcb-review-crossformat
 metrics:
-  - { label: "Eagle wire length, top and bottom", value: "214.12 and 79.95 mm, identical after import" }
+  - { label: "Eagle wire length, top and bottom", value: "214.12 and 79.95 mm, identical after import", hero: "214.12 mm" }
   - { label: "Eagle top copper only in the original", value: "137.0 to 0.0 mm2 after the fixes" }
   - { label: "Altium track width rule", value: "lost on import" }
 star: { planet: neptune }

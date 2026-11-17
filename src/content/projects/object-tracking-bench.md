@@ -4,7 +4,7 @@ summary: "YOLO11 n and s with ByteTrack and BoT-SORT, scored with TrackEval (HOT
 domain: edge-ai
 repo: object-tracking-bench
 metrics:
-  - { label: "Best HOTA", value: "45.47, YOLO11s with BoT-SORT on TensorRT FP16" }
+  - { label: "Best HOTA", value: "45.47, YOLO11s with BoT-SORT on TensorRT FP16", hero: "45.5 HOTA" }
   - { label: "ID switches", value: "20 to 25% fewer with BoT-SORT" }
   - { label: "TensorRT FP16 vs PyTorch", value: "within 1 HOTA" }
 star: { planet: sun }

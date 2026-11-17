@@ -4,7 +4,7 @@ summary: "PPO written from scratch in PyTorch for MuJoCo Hopper, HalfCheetah and
 domain: robot-learning
 repo: ppo-mujoco-control
 metrics:
-  - { label: "Hopper-v5", value: "3395 vs 2933 for SB3" }
+  - { label: "Hopper-v5", value: "3395 vs 2933 for SB3", hero: "3395 reward" }
   - { label: "Walker2d-v5", value: "3827 vs 3231 for SB3" }
   - { label: "Hopper without observation normalisation", value: "2602" }
 demo: { kind: chart, props: { variant: ppo, src: "/projects/ppo-mujoco-control/curves.json", env: "Hopper-v5" } }

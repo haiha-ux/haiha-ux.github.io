@@ -4,7 +4,7 @@ summary: "The open-source SparkFun Qwiic Button (CC BY-SA 4.0) migrated from Eag
 domain: pcb
 repo: eagle-to-kicad-qwiic-button
 metrics:
-  - { label: "Nets", value: "18 of 18 identical pin for pin" }
+  - { label: "Nets", value: "18 of 18 identical pin for pin", hero: "18 nets" }
   - { label: "Copper", value: "193 tracks and 38 vias in both" }
   - { label: "DRC with schematic parity", value: "0 errors, 107 classified warnings" }
 star: { planet: neptune }

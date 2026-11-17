@@ -4,7 +4,7 @@ summary: "Synthetic tabletop data from Isaac Sim Replicator for a YOLO11n detect
 domain: edge-ai
 repo: isaac-synthetic-yolo
 metrics:
-  - { label: "Shifted test set, mAP50-95", value: "0.894 randomized vs 0.583 fixed" }
+  - { label: "Shifted test set, mAP50-95", value: "0.894 randomized vs 0.583 fixed", hero: "0.894 mAP" }
   - { label: "Same-distribution set, mAP50-95", value: "0.982 randomized vs 0.987 fixed" }
   - { label: "Data", value: "2000 train images per set, 2 seeds" }
 star: { planet: sun }
