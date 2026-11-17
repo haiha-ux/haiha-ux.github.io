@@ -1,5 +1,5 @@
 ---
-title: "Diffusion Policy against behaviour cloning on the PushT benchmark"
+title: "Diffusion Policy and behaviour-cloning models on PushT"
 summary: "Diffusion Policy written in plain PyTorch and compared with two behaviour-cloning baselines on state-based PushT, 3 seeds and 50 episodes per seed. Action chunks are sampled live in the browser through ONNX."
 domain: robot-learning
 repo: diffusion-policy-pusht

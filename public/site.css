@@ -64,7 +64,7 @@
 .sky__label { position: absolute; left: var(--xd); top: var(--yd); translate: -50% -40px; font: 500 var(--t-label)/1.2 var(--font-text); color: var(--steel); white-space: nowrap; pointer-events: none; }
 .sky.is-live .sky__label { left: 0; top: 0; }
 @media (max-width: 639px) { .sky__li, .sky__label { left: var(--xt); top: var(--yt); } .sky.is-live .sky__li, .sky.is-live .sky__label { left: 0; top: 0; } }
-.sky__pause { position: absolute; right: var(--s-5); bottom: var(--s-5); z-index: 4; height: 44px; padding: 0 var(--s-4); border: 1px solid var(--line-strong); border-radius: var(--r-btn); background: color-mix(in oklab, var(--bg) 78%, transparent); color: var(--ink); font: 500 var(--t-small)/1 var(--font-text); cursor: pointer; transition: border-color .15s, color .15s; }
+.sky__pause { position: absolute; right: var(--gut, var(--s-5)); bottom: var(--s-5); z-index: 4; height: 44px; padding: 0 var(--s-4); border: 1px solid var(--line-strong); border-radius: var(--r-btn); background: color-mix(in oklab, var(--bg) 78%, transparent); color: var(--ink); font: 500 var(--t-small)/1 var(--font-text); cursor: pointer; transition: border-color .15s, color .15s; }
 .sky__pause:hover { border-color: var(--accent); color: var(--accent); }
 .sky__pause:focus-visible { outline: 2px solid var(--action); outline-offset: 2px; }
 
@@ -90,7 +90,7 @@
 /* ---- tools, drawn traces, bench rows */
 .toolrow { display: flex; flex-wrap: wrap; gap: var(--s-3); margin-top: var(--s-7); }
 .toolrow .ic-chip { background: var(--surface); }
-.trace { position: absolute; left: 0; top: calc(-1 * var(--padt, 120px) + 40px); width: 100%; height: 96px; z-index: 0; pointer-events: none; overflow: visible; }
+.trace { position: absolute; left: 0; top: calc(125px - var(--tp, 120px)); width: 100%; height: 96px; z-index: 0; pointer-events: none; overflow: visible; }
 .trace path { fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 0; vector-effect: non-scaling-stroke; opacity: .85; }
 .trace circle { fill: var(--bg); stroke: var(--accent); stroke-width: 1.6; opacity: 1; vector-effect: non-scaling-stroke; }
 .trace.is-drawn path { stroke-dashoffset: 0; transition: stroke-dashoffset 1.6s cubic-bezier(.4, 0, .2, 1); }
@@ -230,7 +230,8 @@ html:not(.js-trace) .trace path { stroke-dashoffset: 0; } html:not(.js-trace) .t
 .dial__read { min-height: 11em; }
 
 /* the kit sizes a section in whole screens; these two hold more than a screen of cards, so they take their own height */
-main > #featured, main > #bench { height: auto; }
+main > #featured, main > #bench { height: auto; --tp: 250px; padding-top: var(--tp); padding-bottom: 0; }
+@media (max-width: 639px) { main > #featured, main > #bench { --tp: 230px; } .trace { top: calc(101px - var(--tp, 96px)); } }
 main > #featured > .wrap, main > #bench > .wrap { height: auto; }
 
 /* ---- about: large portrait and the three lenses */

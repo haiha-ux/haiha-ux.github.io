@@ -1,5 +1,5 @@
 ---
-title: "AlphaZero-style Connect Four player"
+title: "Connect Four self-play model, AlphaZero style"
 summary: "An AlphaZero-style agent for Connect Four written from scratch in PyTorch: bitboard game, residual network, PUCT search and self-play from random weights, scored against minimax depth 1 to 6 at every checkpoint. The final network runs in the browser."
 domain: robot-learning
 repo: alphazero-connect4
