@@ -16,8 +16,8 @@ const ORDER = ['edge-ai', 'robot-learning', 'pcb', 'cad', 'other'];
 const sorted = [...projects].sort((x, y) => ORDER.indexOf(x.data.domain) - ORDER.indexOf(y.data.domain));
 const isVision = (p: (typeof projects)[number]) => p.data.domain === 'edge-ai' || p.data.domain === 'robot-learning';
 const benchA = sorted.filter(isVision), benchB = sorted.filter((p) => !isVision(p));
-// a wide card covers two cells: 13 cards and 3 wide make 16 cells, 10 and 2 make 12, so every row of four is full
-const wideA = new Set([0, 3, 6]), wideB = new Set([0, 3]);
+// a wide card covers two cells: 13 cards and 3 wide make 16 cells, 12 and 4 make 16, so every row of four is full
+const wideA = new Set([0, 3, 6]), wideB = new Set([0, 3, 6, 9]);
 const LAYOUTS = ['wide', 'stack', 'stack', 'wide', 'tile', 'tile'] as const;
 // the short figure for a picture-less card: the metric's own `hero`, else its first number and one unit word, never a dangling comma or "of"
 const big = (m: { value: string; hero?: string }) => {
