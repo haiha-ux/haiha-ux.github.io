@@ -65,8 +65,8 @@ main#top > .wrap { padding-bottom: var(--s-6); }
 .sky__label { position: absolute; left: var(--xd); top: var(--yd); translate: -50% -40px; font: 500 var(--t-label)/1.2 var(--font-text); color: var(--steel); white-space: nowrap; pointer-events: none; }
 .sky.is-live .sky__label { left: 0; top: 0; }
 @media (max-width: 639px) { .sky__li, .sky__label { left: var(--xt); top: var(--yt); } .sky.is-live .sky__li, .sky.is-live .sky__label { left: 0; top: 0; } }
-/* on a phone the saturn tip sits just under the jupiter label and near the right edge, so its label hangs left of the tip and a little lower */
-@media (max-width: 639px) { .sky__label[data-body="saturn"] { translate: -85% -34px; } }
+/* on a phone the saturn tip sits just under the jupiter label and near the right edge, so its label hangs left of the tip on a dark panel, because the tails run behind it */
+@media (max-width: 639px) { .sky__label[data-body="saturn"] { translate: -85% -34px; background: rgb(20 18 15 / .9); padding: 1px 5px; border-radius: 3px; } }
 .sky__pause { position: absolute; right: var(--gut, var(--s-5)); bottom: var(--s-5); z-index: 4; height: 44px; padding: 0 var(--s-4); border: 1px solid var(--line-strong); border-radius: var(--r-btn); background: color-mix(in oklab, var(--bg) 78%, transparent); color: var(--ink); font: 500 var(--t-small)/1 var(--font-text); cursor: pointer; transition: border-color .15s, color .15s; }
 .sky__pause:hover { border-color: var(--accent); color: var(--accent); }
 .sky__pause:focus-visible { outline: 2px solid var(--action); outline-offset: 2px; }
