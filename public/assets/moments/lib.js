@@ -99,7 +99,6 @@ export function once(el, fn, { threshold = 0.35, margin = '0px', rescue = 3000 }
 
 export function split(el, unit = 'words') {
   if (!el.getAttribute('aria-label')) el.setAttribute('aria-label', el.textContent.replace(/\s+/g, ' ').trim());
-  if (!/^H[1-6]$/.test(el.tagName) && !el.getAttribute('role')) el.setAttribute('role', 'group'); // aria-label is not allowed on a bare p or div
   const inners = [];
   const wrap = (text, cls) => {
     const s = document.createElement('span');
