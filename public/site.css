@@ -262,7 +262,7 @@ main#top > .wrap { padding-bottom: var(--s-6); }
 @media (max-width: 639px) {
   .bgrid { grid-template-columns: minmax(0, 1fr); grid-auto-rows: auto; gap: var(--s-2); margin-top: var(--s-4); }
   .bcard--wide { grid-column: auto; }
-  .bcard { grid-template-rows: none; grid-template-columns: 128px minmax(0, 1fr); min-height: 96px; }
+  .bcard { grid-template-rows: none; grid-template-columns: 128px minmax(0, 1fr); min-height: 80px; }
   .bcard__body { padding: var(--s-2) var(--s-3); gap: 2px; align-content: center; }
   .bcard__body h3 { font-size: 14px; line-height: 1.25; }
   .bcard__body p { font-size: 12.5px; line-height: 1.3; }
