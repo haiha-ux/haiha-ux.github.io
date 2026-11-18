@@ -26,7 +26,7 @@ repo: <github repo name>
 metrics:
   - { label: "...", value: "..." }
 demo: { kind: iframe, src: "https://haiha-ux.github.io/<repo>/" }   # optional
-star: { planet: sun }  # the tail it sits on; sun, jupiter and neptune are the three bright ones
+star: { planet: sun }  # the tail it sits on; sun, jupiter, neptune and saturn are the four bright ones
 year: 2026
 featured: false
 order: 30

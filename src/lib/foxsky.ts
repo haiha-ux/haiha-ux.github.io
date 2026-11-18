@@ -7,8 +7,8 @@ export type V3 = [number, number, number];
 export type Body = 'sun' | 'moon' | 'mercury' | 'venus' | 'mars' | 'jupiter' | 'saturn' | 'uranus' | 'neptune';
 const NINE: Body[] = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune'];
 
-/** The three bright tails are the three trades; the other six hold the remaining projects and ornament. */
-export const MAIN_TAILS: Record<string, Body> = { 'edge-ai': 'sun', 'robot-learning': 'jupiter', pcb: 'neptune' };
+/** The four bright tails are the four trades; the other five hold the remaining projects and ornament. */
+export const MAIN_TAILS: Record<string, Body> = { 'edge-ai': 'sun', 'robot-learning': 'jupiter', pcb: 'neptune', cad: 'saturn' };
 /** Where the tails start when the fox stands at rest; the live scene replaces it with the tail bone's position. */
 export const BASE: V3 = [2.1, 0.3, -0.6];
 /** The fox glb (Khronos glTF Sample Assets) is ~155 long and ~79 tall; scale and yaw put it left-facing, three-quarter view, on the dial. */
