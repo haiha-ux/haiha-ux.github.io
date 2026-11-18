@@ -1,5 +1,5 @@
 // kind "pcb3d": GLB exported by `kicad-cli pcb export glb`, viewed with three.js (orbit, zoom, top/bottom/iso).
-// props: src (glb URL, meshopt-compressed ok), fallback (still image URL), title?, note?
+// props: src (glb URL, meshopt-compressed ok), fallback (still image URL), title?, note?, caption? (status line once loaded, instead of the board size)
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
@@ -15,6 +15,7 @@ export async function mount(el: HTMLElement, props: Record<string, unknown>): Pr
   const fallback = typeof props.fallback === "string" ? props.fallback : "";
   const title = typeof props.title === "string" ? props.title : "PCB 3D view";
   const note = typeof props.note === "string" ? props.note : "";
+  const caption = typeof props.caption === "string" ? props.caption : "";
   const compact = props.compact === true; // a bare turning board for a card: no title, buttons or status line
 
   const status = h("div", { class: "dm-tip", role: "status", "aria-live": "polite" }, "Loading 3D board...");
@@ -189,7 +190,7 @@ export async function mount(el: HTMLElement, props: Record<string, unknown>): Pr
       goto("iso");
       fill.style.width = "100%";
       bar.style.display = "none";
-      status.textContent = `Board ${boardMm}. Drag to rotate, scroll to zoom. Copper, soldermask and silkscreen only.`;
+      status.textContent = caption ? `${caption} Drag to rotate, scroll to zoom.` : `Board ${boardMm}. Drag to rotate, scroll to zoom. Copper, soldermask and silkscreen only.`;
       canvas.dataset.ready = "1";
       resize();
     },

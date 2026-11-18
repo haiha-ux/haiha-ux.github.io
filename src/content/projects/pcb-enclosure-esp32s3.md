@@ -7,6 +7,7 @@ metrics:
   - { label: "Case", value: "87.58 x 96.54 mm, thinnest wall 1.665 mm", hero: "87.58 x 96.54 mm" }
   - { label: "Interference", value: "0 mm3 between every pair of parts, 412 board solids included" }
   - { label: "USB-C plug", value: "overmold 6.30 mm from the mating datum, limit 6.5 mm" }
+demo: { kind: pcb3d, props: { src: "/projects/pcb-enclosure-esp32s3/enclosure.glb", fallback: "/projects/pcb-enclosure-esp32s3/fallback.webp", title: "Enclosure around the ESP32-S3 e-paper board", caption: "Base, board and lid, with the lid lifted 22 mm so the board shows." } }
 star: { planet: saturn }
 year: 2026
 featured: true
